@@ -1,0 +1,24 @@
+stage	output_relative_to_run	type	required	note
+cre_01_reclassify	cre_e1e9/reuse_manifest.tsv	TSV	yes	Source-to-run link/copy record.
+cre_01_reclassify	cre_e1e9/classified/*.bed	BED collection	yes	sfCRE, sdCRE and soCRE E1-E9 classifications.
+cre_01_reclassify	cre_e1e9/per_tissue_classification.tsv	TSV	yes	Counts for sfCRE, sdCRE, soCRE and ssCRE.
+cre_02_hg38_to_hg19	cre_e1e9/classified_hg19/*.bed	BED collection	yes	Human classified intervals in hg19.
+cre_02_hg38_to_hg19	cre_e1e9/ssCRE_hg19/*.bed	BED collection	yes	Unmapped human intervals converted to hg19.
+cre_02_hg38_to_hg19	cre_e1e9/hg38_to_hg19_summary.tsv	TSV	yes	Mapping counts.
+cre_03_collect_e5	cre_e1e9/E5_hg19_all/E5_hg19_all_summary.tsv	TSV	yes	E5 collection summary.
+cre_05_label_tsr	cre_e1e9/CRE_TSR_E5_hg19/annotation_summary.tsv	TSV	yes	TSR annotation counts.
+cre_06_reuse_projection	cre_e1e9/E5_sfCRE_reuse_validation.tsv	TSV	yes	Guard proving whether projection reuse is allowed.
+cre_07_split_ldsc	cre_e1e9/LDSC_annotation_summary.tsv	TSV	yes	LDSC BED slice counts and total bp.
+cre_08_collect_gwas_beds	gwas_ldsc/beds/*.bed	68 BED files	yes	Final A1/A2/B1/B2 annotation BED collection.
+gwas_prepare	gwas_ldsc/manifests/*.tsv	TSV collection	yes	Header-bearing normalized array manifests.
+gwas_prepare	gwas_ldsc/ldcts/*.ldcts	LDSC configuration	yes	Five CTS LD-score specifications.
+gwas_submit	gwas_ldsc/outputs/**	LDSC results	yes	Partitioned h2 and CTS outputs.
+gwas_summary	gwas_ldsc/summary/A2_B2_all_tissues_all_classes_enrichment_stats_long.csv	CSV	yes	Direct input to final GWAS panels.
+figure_input_merge	cre_e1e9/visualization_tables_E1E9_reuse_existing/results_hg38/merged_classification_summary.tsv	TSV	yes	Direct input to Figure 8d.
+figure_input_merge	cre_e1e9/visualization_tables_E1E9_reuse_existing/results_hg38/E*.{sfCRE,sdCRE,soCRE,ssCRE}.bed	36 BED files	yes	Merged deduplicated E1-E9 intervals for conservation scoring.
+figure_input_conservation	configured CONSERVATION_TABLE	gzip TSV	yes	Per-CRE phastCons phyloP and GERP covered bases and means.
+fig8	figures/fig8/Fig8b_*	PDF and PNG	yes	Emission panel.
+fig8	figures/fig8/Fig8d_*	PDF and PNG	yes	CRE composition panel.
+fig8	figures/fig8/Fig8e_*	PDF and PNG	yes	Conservation panel.
+fig8	figures/fig8/Fig8f_*	PDF and PNG	yes	GWAS hit-overlap panel.
+fig8	figures/fig8/Fig8g_*	PDF and PNG	yes	GWAS sfCRE dot plot.

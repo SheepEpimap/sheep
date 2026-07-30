@@ -1,0 +1,12 @@
+bedtools
+ChromBPNet
+deepTools
+Fi-NeMo
+GimmeMotifs
+MEME Suite (TomTom/FIMO)
+modisco-lite
+NucleoATAC
+PLINK
+samtools
+TOBIAS
+UCSC utilities
