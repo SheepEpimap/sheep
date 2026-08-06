@@ -1,7 +1,0 @@
-figure_object	canonical_code	inputs	outputs	status	note
-Fig8b	src/sheep_epimap/figures/fig8.py	HUMAN_EMISSION;SHEEP_EMISSION_R1;SHEEP_EMISSION_R2	FIG8_FINAL_DIR/Fig8b_*	active	Extracted from confirmed emission cells and consolidated with the final panel style.
-Fig8d	src/sheep_epimap/figures/fig8.py	MERGED_CLASSIFICATION	FIG8_FINAL_DIR/Fig8d_*	active	Uses merged deduplicated E1-E9 classification summary.
-Fig8e	src/sheep_epimap/figures/fig8.py	CONSERVATION_TABLE	FIG8_FINAL_DIR/Fig8e_*	active	Conservation table path is explicit because notebook execution used an older kernel work root.
-Fig8f	src/sheep_epimap/figures/fig8.py	GWAS_STATS;TRAIT_38_XLSX;TRAIT_152_TSV	FIG8_FINAL_DIR/Fig8f_*	active	Direct Matplotlib UpSet implementation; no upsetplot dependency.
-Fig8g	src/sheep_epimap/figures/fig8.py	GWAS_STATS;TRAIT_38_XLSX;TRAIT_152_TSV;TISSUE_COLOR_FILE	FIG8_FINAL_DIR/Fig8g_*	active	Colored points require Coefficient greater than zero and nominal P below 0.05.
-fig8.tif	unknown composite/export project	Fig8 panels including untraced a c h	archived final TIFF	provenance-only	SHA256 5cb22295cfa48050dbcf29bcb499e3bd1148526c898c11319f605e3c034a3ce7; not included.

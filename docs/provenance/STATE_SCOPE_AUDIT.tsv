@@ -1,4 +1,0 @@
-panel	check	status	detail
-Figure_02c	E1-E11	PASSED	The complete eleven-state set is explicitly retained.
-Figure_02c	No E12-E20 iteration	PASSED	No obsolete state loop beyond E11 was detected.
-Figure_08	E1-E9 cross-species scope	PASSED	The Figure 8 panel README and workflow retain the analysis-specific E1-E9 scope.

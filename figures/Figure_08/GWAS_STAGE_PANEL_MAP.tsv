@@ -1,7 +1,0 @@
-workflow_stage	panel_mapping	reason
-preflight	Shared	Checks paths and tools for the complete Figure 8 project.
-cre_submit_slurm	Figure_08c;Figure_08d;Figure_08e;Figure_08f;Figure_08g;ancillary_B2	Submits the complete E1-E9 CRE preparation chain.
-gwas_prepare	Figure_08f;Figure_08g;Supplementary_Figure_16c;ancillary_A1_B1_B2	Builds shared LDSC annotations, controls and manifests.
-gwas_submit_slurm	Figure_08f;Figure_08g;Supplementary_Figure_16c;ancillary_A1_B1_B2	Submits all A1/B1/A2/B2 branches; it is not a Figure 8a-specific stage.
-gwas_summary	Figure_08f;Figure_08g;Supplementary_Figure_16c;ancillary_A1_B1_B2	Runs all summaries; A2 supplies the submitted panels.
-fig8 --panels f g	Figure_08f;Figure_08g	Writes the confirmed final GWAS panels.

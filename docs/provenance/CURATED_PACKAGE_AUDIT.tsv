@@ -1,6 +1,0 @@
-check	status	detail
-mapped_paths_exist	PASSED	
-no_forbidden_relation	PASSED	
-no_forbidden_directory	PASSED	
-checked_34_figures	PASSED	Expected one header plus 34 figure rows.
-methylation_not_unmatched	PASSED	Figure 2c must not remain unmatched.
