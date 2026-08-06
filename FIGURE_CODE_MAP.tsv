@@ -1,0 +1,132 @@
+figure	panel	order	script	relation	purpose	source_file	source_block	source_lines
+Extended_Data_Figure_03	03a-03e	01	figures/Extended_Data_Figure_03/03a-03e/01_scan_correlation_thresholds.py	PANEL_CODE	Evaluate thresholds, q values and classification metrics.	sheep_cor.md	7	578-914
+Extended_Data_Figure_03	03a-03e	02	figures/Extended_Data_Figure_03/03a-03e/02_calculate_jaccard_support.py	PANEL_CODE	Calculate ATAC/H3K27ac link-set overlap and Jaccard support.	sheep_cor.md	9	931-1334
+Extended_Data_Figure_03	03f-03j	01	figures/Extended_Data_Figure_03/03f-03j/01_plot_link_correlation_histogram.py	PANEL_CODE	Plot enhancer-gene correlation distributions.	sheep_cor.md	12	1417-1728
+Extended_Data_Figure_03	03f-03j	02	figures/Extended_Data_Figure_03/03f-03j/02_plot_link_summary_statistics.py	PANEL_CODE	Plot link degree, distance, correlation and q-value summaries.	sheep_cor.md	14	1737-2359
+Extended_Data_Figure_03	03f-03j	03	figures/Extended_Data_Figure_03/03f-03j/03_plot_distance_and_qvalue.R	PANEL_CODE	Plot distance and correlation/q-value distributions.	sheep_cor.md	16	2381-2483
+Extended_Data_Figure_03	03k-03n	01	figures/Extended_Data_Figure_03/03k-03n/01_define_target_gene_groups.sh	PANEL_INPUT	Define target-gene connectivity groups.	sheep_cor.md	18	2535-2838
+Extended_Data_Figure_03	03k-03n	02	figures/Extended_Data_Figure_03/03k-03n/02_plot_group_expression_tau_conservation.R	PANEL_CODE	Compare expression, tissue specificity and conservation.	sheep_cor.md	22	3034-3323
+Extended_Data_Figure_03	03k-03n	03	figures/Extended_Data_Figure_03/03k-03n/03_plot_group_go_enrichment.R	PANEL_CODE	Plot GO terms for target-gene connectivity groups.	sheep_cor.md	28	4078-4220
+Extended_Data_Figure_04	04a	01	figures/Extended_Data_Figure_04/04a/01_extract_model_metrics.py	PANEL_INPUT	Extract Spearman correlation, MSE, JSD and normalized JSD metrics.	deeplearning.md	30	1667-1749
+Extended_Data_Figure_04	04a	02	figures/Extended_Data_Figure_04/04a/02_plot_model_metrics.py	PANEL_CODE	Plot the four submitted per-tissue model-performance metrics.	deeplearning.md	31	1753-1951
+Extended_Data_Figure_04	04b-04c	01	figures/Extended_Data_Figure_04/04b-04c/01_prepare_external_atac_data.sh	PANEL_INPUT	Prepare the external ATAC-seq validation dataset.	chrombpnet_vail.md	1	1-222
+Extended_Data_Figure_04	04b-04c	02	figures/Extended_Data_Figure_04/04b-04c/02_predict_external_accessibility.sh	PANEL_INPUT	Predict accessibility for external validation tissues.	chrombpnet_vail.md	2	224-284
+Extended_Data_Figure_04	04b-04c	03	figures/Extended_Data_Figure_04/04b-04c/03_prepare_external_correlation_inputs.sh	PANEL_INPUT	Prepare observed-versus-predicted validation inputs.	chrombpnet_vail.md	3	286-363
+Extended_Data_Figure_04	04b-04c	04	figures/Extended_Data_Figure_04/04b-04c/04_calculate_internal_correlations.R	PANEL_CODE	Calculate observed-versus-predicted accessibility correlations for the study data used in the left part of panel 4b.	deeplearning.md	40	2519-2698
+Extended_Data_Figure_04	04b-04c	05	figures/Extended_Data_Figure_04/04b-04c/05_calculate_external_correlations.R	PANEL_CODE	Calculate study and external-dataset observed-versus-predicted correlations.	chrombpnet_vail.md	4	365-587
+Extended_Data_Figure_04	04b-04c	06	figures/Extended_Data_Figure_04/04b-04c/06_plot_external_correlations.py	PANEL_CODE	Plot the external-validation correlation panels.	chrombpnet_vail.md	5	589-826
+Extended_Data_Figure_04	04b-04c	07	figures/Extended_Data_Figure_04/04b-04c/07_run_external_correlation_plot.sh	PANEL_CODE	Run the external-validation correlation plot.	chrombpnet_vail.md	6	828-838
+Extended_Data_Figure_04	04d	01	figures/Extended_Data_Figure_04/04d/01_plot_snap25_observed_predicted_counts.py	PANEL_CODE	Aggregate observed and predicted counts across tissues in the SNAP25 region and plot their correlation.	deeplearning.md	41	2702-2990
+Extended_Data_Figure_04	04d	02	figures/Extended_Data_Figure_04/04d/02_run_snap25_observed_predicted_counts.sh	PANEL_CODE	Run the SNAP25 regional observed-versus-predicted counts plot with the submitted coordinates.	deeplearning.md	42	2992-3000
+Extended_Data_Figure_04	04e	01	figures/Extended_Data_Figure_04/04e/01_plot_motif_category_qvalues_and_instances.R	PANEL_CODE	Compare motif-matching significance and total instance numbers between resolved and unresolved motifs.	Pasted markdown.md	22	600-625
+Extended_Data_Figure_04	04f	01	figures/Extended_Data_Figure_04/04f/01_plot_tissue_motif_instance_summary.R	PANEL_CODE	Plot peak coverage, total instances and median instances per peak across tissues.	Pasted markdown.md	24	666-753
+Extended_Data_Figure_04	04g	01	figures/Extended_Data_Figure_04/04g/01_plot_instances_vs_peak_count.R	PARTIAL_PANEL	Plot total motif instances against ATAC-seq peak count; the source also generates two exploratory companion panels.	Pasted markdown.md	25	761-862
+Extended_Data_Figure_04	04h	01	figures/Extended_Data_Figure_04/04h/01_plot_peak_summit_distance_proportions.R	PARTIAL_PANEL	Plot motif-instance proportions across peak-summit distance bins; the submitted panel retains three selected motifs.	Pasted markdown.md	31	1054-1091
+Extended_Data_Figure_06	06a-06c	01	figures/Extended_Data_Figure_06/06a-06c/01_plot_enhancer_gene_link_distributions.py	PANEL_CODE	Plot cumulative distributions of genes per enhancer, enhancers per gene and enhancer-gene distance.	split_enhancer_by_tissue_count.md	16	15133-15480
+Extended_Data_Figure_06	06d-06f	01	figures/Extended_Data_Figure_06/06d-06f/01_compare_expression_and_conservation.py	PARTIAL_PANEL	Plot target-gene expression and enhancer phastCons and GERP comparisons; the source also plots tau and phyloP outputs not used in these panels.	split_enhancer_by_tissue_count.md	15	13352-15129
+Extended_Data_Figure_06	06g-06h	01	figures/Extended_Data_Figure_06/06g-06h/01_analyze_as_site_density_and_enrichment.py	PARTIAL_PANEL	Plot allele-specific site density and enrichment; an additional percentage panel from the source is not used in the submitted figure.	split_enhancer_by_tissue_count.md	17	15486-16636
+Extended_Data_Figure_06	06i	01	figures/Extended_Data_Figure_06/06i/01_analyze_chrombpnet_significant_as_variants.py	PARTIAL_PANEL	Plot the density and enrichment of ChromBPNet-significant ATAC-seq AS variants; the source also produces effect-size panels.	split_enhancer_by_tissue_count.md	18	16642-18212
+Extended_Data_Figure_06	06j	01	figures/Extended_Data_Figure_06/06j/01_analyze_motif_overlapping_as_variants.py	PANEL_CODE	Plot the density and enrichment of motif-overlapping ChromBPNet-significant ATAC-seq AS variants.	split_enhancer_by_tissue_count.md	19	18218-19750
+Extended_Data_Figure_06	06k-06n	01	figures/Extended_Data_Figure_06/06k-06n/01_compare_histone_as_effect_sizes.py	PARTIAL_PANEL	Compare histone-mark AS effect sizes; panels 6k-6n use the H3K27ac, H3K4me1, H3K4me3 and H3K27me3 outputs.	split_enhancer_by_tissue_count.md	21	20519-22890
+Figure_02	02c	01	figures/Figure_02/02c/01_download_ena_fastq.sh	PANEL_INPUT	Download RRBS/WGBS FASTQ files from ENA with restartable Aspera transfers.	methylation_analysis.md	1	1-183
+Figure_02	02c	02	figures/Figure_02/02c/02_verify_fastq_md5.sh	VALIDATION	Compare local paired-end FASTQ MD5 values with ENA metadata.	methylation_analysis.md	2	185-299
+Figure_02	02c	03	figures/Figure_02/02c/03_run_fastqc_multiqc.sh	VALIDATION	Run FastQC and aggregate raw-read quality metrics with MultiQC.	methylation_analysis.md	3	303-324
+Figure_02	02c	04	figures/Figure_02/02c/04_prepare_bismark_references.sh	PANEL_INPUT	Prepare sheep and lambda Bismark references and chromosome sizes.	methylation_analysis.md	5	383-424
+Figure_02	02c	05	figures/Figure_02/02c/05_make_samplesheet.sh	PANEL_INPUT	Create the paired-end RRBS/WGBS sample sheet.	methylation_analysis.md	6	426-473
+Figure_02	02c	06	figures/Figure_02/02c/06_run_bismark_one_sample.sh	PANEL_INPUT	Trim, align, deduplicate WGBS reads, and extract methylation calls for one sample.	methylation_analysis.md	7	475-657
+Figure_02	02c	07	figures/Figure_02/02c/07_run_bismark_array.sbatch	PANEL_INPUT	Run one methylation sample per SLURM array task.	methylation_analysis.md	8	659-691
+Figure_02	02c	08	figures/Figure_02/02c/08_submit_bismark_array.sh	PANEL_INPUT	Submit the complete methylation sample set as a bounded SLURM array.	methylation_analysis.md	9	695-713
+Figure_02	02c	09	figures/Figure_02/02c/09_summarize_state_methylation.sh	PANEL_INPUT	Match each sample to its tissue annotation and calculate weighted methylation for E1-E11.	methylation_analysis.md	10	715-993
+Figure_02	02c	10	figures/Figure_02/02c/10_plot_state_methylation.R	PANEL_CODE	Plot the Figure 2c E1-E11 methylation distributions without dropping E11 or high values.	methylation_analysis.md	11	995-1158
+Figure_02	02c	11	figures/Figure_02/02c/11_validate_methylation_outputs.sh	VALIDATION	Check sample outputs, coverage files, E1-E11 completeness, uniqueness, and value ranges.	methylation_analysis.md	derived	717-1158
+Figure_02	02d	01	figures/Figure_02/02d/01_merge_chromatin_states.sh	PANEL_INPUT	Merge chromatin-state intervals across tissues.	h3k27ac link enhancer to gene.md	1	5-21
+Figure_02	02d	02	figures/Figure_02/02d/02_remove_blacklist.sh	PANEL_INPUT	Remove blacklist intervals.	h3k27ac link enhancer to gene.md	2	25-46
+Figure_02	02d	03	figures/Figure_02/02d/03_quantify_h3k27ac.sh	PANEL_INPUT	Quantify H3K27ac signal over candidate enhancers.	h3k27ac link enhancer to gene.md	3	50-65
+Figure_02	02d	04	figures/Figure_02/02d/04_standardize_count_headers.py	PANEL_INPUT	Standardize count-table sample names.	h3k27ac link enhancer to gene.md	4	67-110
+Figure_02	02d	05	figures/Figure_02/02d/05_prepare_expression_tables.py	PANEL_INPUT	Prepare expression and regulatory-signal matrices.	h3k27ac link enhancer to gene.md	5	114-128
+Figure_02	02d	06	figures/Figure_02/02d/06_edger_cpm_normalization.R	PANEL_INPUT	Normalize H3K27ac counts to CPM.	h3k27ac link enhancer to gene.md	6	132-142
+Figure_02	02d	07	figures/Figure_02/02d/07_run_enhancer_gene_correlation.sh	PANEL_INPUT	Run enhancer-gene correlation analysis by state.	h3k27ac link enhancer to gene.md	7	148-182
+Figure_02	02d	08	figures/Figure_02/02d/08_correlate_enhancers_with_genes.py	PANEL_CODE	Calculate distance-constrained enhancer-gene correlations and FDR.	h3k27ac link enhancer to gene.md	8	186-471
+Figure_02	02e	01	figures/Figure_02/02e/01_summarize_enhancer_gene_links.py	PANEL_CODE	Summarize enhancer degree, gene degree, distance and correlation.	sheep_cor.md	14	1737-2359
+Figure_02	02e	02	figures/Figure_02/02e/02_run_link_summary.sh	PANEL_CODE	Run the enhancer-gene summary script.	sheep_cor.md	15	2361-2377
+Figure_02	02j-02k	01	figures/Figure_02/02j-02k/01_prepare_sheep_juicer_reference.sh	PANEL_INPUT	Prepare the sheep BWA reference, chromosome sizes, and MboI restriction map.	Hi-C_Juicer.md	1-3;8	3-102;207-223
+Figure_02	02j-02k	02	figures/Figure_02/02j-02k/02_run_juicer_one_sample.sh	PANEL_INPUT	Run the CPU Juicer workflow for one sheep Hi-C sample.	Hi-C_Juicer.md	5;8	112-140;207-223
+Figure_02	02j-02k	03	figures/Figure_02/02j-02k/03_run_juicer_array.sbatch	PANEL_INPUT	Run one sheep Hi-C sample per SLURM array task.	Hi-C_Juicer.md	parameterized	207-241
+Figure_02	02j-02k	04	figures/Figure_02/02j-02k/04_submit_juicer_array.sh	PANEL_INPUT	Submit all sheep Hi-C samples as a bounded SLURM array.	Hi-C_Juicer.md	parameterized	207-241
+Figure_02	02j-02k	05	figures/Figure_02/02j-02k/05_collect_juicer_qc.sh	VALIDATION	Collect valid pairs, duplicate rate, cis/trans balance, long-range contacts, and distance decay.	Hi-C_Juicer.md	QC-1	243-477
+Figure_02	02j-02k	06	figures/Figure_02/02j-02k/06_filter_and_plot_hic_qc.py	VALIDATION	Apply strict and relaxed Hi-C QC filters and plot sample-level diagnostics.	Hi-C_Juicer.md	QC-2	479-1134
+Figure_02	02j-02k	07	figures/Figure_02/02j-02k/07_mega_group_samples.tsv	PANEL_INPUT	Define the author-selected Hi-C samples included in each merged tissue group.	Hi-C_Juicer.md	merge-table	1136-1193
+Figure_02	02j-02k	08	figures/Figure_02/02j-02k/08_build_group_hic_maps.sh	PANEL_INPUT	Merge selected valid-pair files and build normalized MAPQ30 group contact maps.	Hi-C_Juicer.md	merge-workflow	1193-1418
+Figure_02	02j-02k	09	figures/Figure_02/02j-02k/09_dump_figure2_hic_regions.sh	PANEL_CODE	Export the chr6 regions displayed in Figure 2j and the TMPRSS11A Figure 2k locus.	Hi-C_Juicer.md	dump	144-166
+Figure_02	02j-02k	10	figures/Figure_02/02j-02k/10_validate_hic_outputs.sh	VALIDATION	Validate individual and merged .hic files by extracting a chr6 contact matrix.	Hi-C_Juicer.md	derived	243-477
+Figure_03	03a	01	figures/Figure_03/03a/01_train_chrombpnet_bias_models.sh	PANEL_INPUT	Train per-tissue bias models on the /data cluster.	deeplearning.md	15	451-470
+Figure_03	03a	02	figures/Figure_03/03a/02_train_chrombpnet_models.sh	PANEL_INPUT	Train per-tissue ChromBPNet models on the /data cluster.	deeplearning.md	14	431-449
+Figure_03	03a	03	figures/Figure_03/03a/03_compute_contributions_and_modisco.sh	PANEL_INPUT	Compute contribution scores and run TF-MoDISco.	deeplearning.md	16	472-498
+Figure_03	03a	04	figures/Figure_03/03a/04_predict_accessibility_bigwigs.sh	PANEL_INPUT	Generate observed and predicted accessibility bigWigs.	deeplearning.md	18	504-519
+Figure_03	03b	01	figures/Figure_03/03b/01_extract_model_metrics.py	PANEL_CODE	Extract per-tissue Pearson correlation and other evaluation metrics from the ChromBPNet JSON files; the submitted panel was drawn directly from this table.	deeplearning.md	30	1667-1749
+Figure_03	03c	01	figures/Figure_03/03c/01_extract_tissue_pfms.py	PANEL_INPUT	Extract trimmed PFMs and seqlet metadata from per-tissue TF-MoDISco files.	deeplearning.md	48	3454-3576
+Figure_03	03c	02	figures/Figure_03/03c/02_cluster_cross_tissue_motifs.sh	PANEL_INPUT	Cluster motifs across tissues with GimmeMotifs.	deeplearning.md	49	3578-3649
+Figure_03	03c	03	figures/Figure_03/03c/03_rename_and_join_clusters.py	PANEL_INPUT	Rename clusters and join cluster assignments to motif annotations.	deeplearning.md	50	3653-3827
+Figure_03	03c	04	figures/Figure_03/03c/04_merge_modisco_patterns.py	PANEL_INPUT	Merge aligned TF-MoDISco patterns within cross-tissue clusters.	deeplearning.md	51	3833-4398
+Figure_03	03c	05	figures/Figure_03/03c/05_compile_merged_patterns.py	PANEL_INPUT	Compile merged patterns into HDF5 and tabular outputs.	deeplearning.md	52	4402-4579
+Figure_03	03c	06	figures/Figure_03/03c/06_annotate_merged_patterns.py	PANEL_INPUT	Annotate merged motifs with JASPAR/TomTom matches.	deeplearning.md	53	4581-4932
+Figure_03	03c	07	figures/Figure_03/03c/07_run_motif_annotation.sh	PANEL_INPUT	Run merged-motif annotation.	deeplearning.md	54	4934-4961
+Figure_03	03c	08	figures/Figure_03/03c/08_plot_resolved_unresolved_motif_counts.R	PANEL_CODE	Plot the resolved and unresolved de novo motif counts shown in the submitted panel.	Pasted markdown.md	21	558-593
+Figure_03	03d	01	figures/Figure_03/03d/01_prepare_heatmap_inputs.R	PANEL_INPUT	Prepare seqlet, tissue-colour and motif-order tables.	deeplearning.md	58	5076-5239
+Figure_03	03d	02	figures/Figure_03/03d/02_plot_clustered_motif_heatmap.R	PANEL_CODE	Cluster the 118 motifs and 43 tissues and plot the submitted ComplexHeatmap with marginal count bars.	conversation_pasted_figure3d_complexheatmap.R	0	1-224
+Figure_03	03e	01	figures/Figure_03/03e/01_build_motif_summary_panels.R	PANEL_CODE	Build the motif-instance summary panels used in Fig. 3e and Supplementary Fig. 12a.	Pasted markdown.md	35	1178-1425
+Figure_03	03f	01	figures/Figure_03/03f/01_merge_motif_hits_across_tissues.sh	PANEL_INPUT	Merge motif hits across tissues for conservation profiling.	deeplearning.md	142	17574-17641
+Figure_03	03f	02	figures/Figure_03/03f/02_compute_gerp_profiles.sh	PANEL_INPUT	Compute centered GERP profiles for every motif.	deeplearning.md	143	17643-17785
+Figure_03	03f	03	figures/Figure_03/03f/03_run_gerp_profiles.sh	PANEL_INPUT	Run the GERP-profile calculation.	deeplearning.md	144	17787-17792
+Figure_03	03f	04	figures/Figure_03/03f/04_plot_selected_motif_gerp.py	PANEL_CODE	Plot centered GERP profiles for selected motifs.	deeplearning.md	145	17794-17932
+Figure_03	03f	05	figures/Figure_03/03f/05_run_selected_motif_gerp.sh	PANEL_CODE	Example invocation for a selected motif.	deeplearning.md	146	17934-17942
+Figure_03	03g	01	figures/Figure_03/03g/01_run_chrombpnet_footprints.sh	PANEL_INPUT	Prepare motif PWMs and run ChromBPNet footprint prediction.	deeplearning.md	70	7060-7350
+Figure_03	03g	02	figures/Figure_03/03g/02_export_chrombpnet_footprints.py	PANEL_INPUT	Export ChromBPNet footprint arrays to editable tables and plots.	deeplearning.md	70	7060-7350
+Figure_03	03g	03	figures/Figure_03/03g/03_run_footprint_export.sh	PANEL_INPUT	Run footprint export across tissues.	deeplearning.md	70	7060-7350
+Figure_03	03g	04	figures/Figure_03/03g/04_run_tobias.sh	PANEL_INPUT	Run TOBIAS correction and footprint scoring.	deeplearning.md	85	9492-9520
+Figure_03	03g	05	figures/Figure_03/03g/05_plot_tobias_corrected_footprint.py	PARTIAL_PANEL	Plot corrected TOBIAS footprint profiles; select thyroid and CTCF#2 for the submitted lower panel.	deeplearning.md	87	9712-9959
+Figure_03	03h	01	figures/Figure_03/03h/01_plot_single_locus_tracks.R	PARTIAL_PANEL	Plot observed, predicted, contribution, footprint and gene tracks.	track_visualization.md	12	1402-2080
+Figure_03	03h	02	figures/Figure_03/03h/02_run_single_locus_tracks.sh	PARTIAL_PANEL	Example command for a single-locus plot.	track_visualization.md	13	2082-2129
+Figure_04	04a	01	figures/Figure_04/04a/01_build_network_one_tissue.sh	PANEL_INPUT	Build a complete motif-enhancer-promoter-gene chain per tissue; panel 4a is a schematic.	deeplearning_motif_network.md	2	16-365
+Figure_04	04a	02	figures/Figure_04/04a/02_run_all_tissues.sh	PANEL_INPUT	Run the network builder for every tissue.	deeplearning_motif_network.md	3	367-373
+Figure_04	04a	03	figures/Figure_04/04a/03_compile_all_tissues.sh	PANEL_INPUT	Compile complete-chain networks across tissues.	deeplearning_motif_network.md	5	714-780
+Figure_04	04b	01	figures/Figure_04/04b/01_build_network_tables.sh	PANEL_INPUT	Generate node and edge tables for downstream network visualization.	deeplearning_motif_network.md	2	16-365
+Figure_04	04b	02	figures/Figure_04/04b/02_compile_network_tables.sh	PARTIAL_PANEL	Compile network tables across tissues; the submitted network layout was assembled externally.	deeplearning_motif_network.md	5	714-780
+Figure_04	04c	01	figures/Figure_04/04c/01_compile_network_tables_for_counts.sh	PARTIAL_PANEL	Compile the ChromBPNet full-chain network tables used to count motifs, enhancers, promoters and genes by tissue; the final bar plot was assembled externally.	deeplearning_motif_network.md	5	714-780
+Figure_05	05d	01	figures/Figure_05/05d/01_calculate_as_enrichment.py	PANEL_INPUT	Calculate AS and ChromBPNet-significant AS enrichment ratios.	deeplearning.md	173	22726-23148
+Figure_05	05d	02	figures/Figure_05/05d/02_run_as_enrichment.sh	PANEL_INPUT	Run the AS-enrichment calculation.	deeplearning.md	174	23150-23162
+Figure_05	05d	03	figures/Figure_05/05d/03_plot_as_vs_significant_as_enrichment.py	PANEL_CODE	Plot paired fold enrichment for all AS variants versus ChromBPNet-significant AS variants.	deeplearning.md	177	23474-23849
+Figure_05	05f	01	figures/Figure_05/05f/01_plot_enhancer_tissue_count_distribution.py	PANEL_CODE	Assign active enhancers to five tissue-sharing classes and plot their distribution.	split_enhancer_by_tissue_count.md	14	13061-13346
+Figure_05	05g	01	figures/Figure_05/05g/01_compare_enhancer_conservation.py	PARTIAL_PANEL	Calculate enhancer conservation scores and plot the phyloP comparison used in panel 5g; the source also plots additional metrics.	split_enhancer_by_tissue_count.md	15	13352-15129
+Figure_05	05h	01	figures/Figure_05/05h/01_analyze_as_site_enrichment.py	PARTIAL_PANEL	Calculate allele-specific site density and enrichment across enhancer-sharing classes; panel 5h uses the density component.	split_enhancer_by_tissue_count.md	17	15486-16636
+Figure_05	05i	01	figures/Figure_05/05i/01_overlap_sheep_variants_with_enhancers.py	PANEL_INPUT	Count unique sheep SNP sites in each enhancer-sharing class.	split_enhancer_by_tissue_count.md	10	10054-11196
+Figure_05	05i	02	figures/Figure_05/05i/02_plot_snp_density_and_enrichment.py	PANEL_CODE	Plot unique-SNP density and Fisher enrichment across enhancer-sharing classes.	split_enhancer_by_tissue_count.md	20	19758-20511
+Figure_05	05j-05k	01	figures/Figure_05/05j-05k/01_compare_as_and_ase_effect_sizes.py	PARTIAL_PANEL	Compare epigenomic AS and target-gene RNA-seq ASE effect sizes; panels 5j and 5k use the ATAC-seq and RNA-seq outputs.	split_enhancer_by_tissue_count.md	21	20519-22890
+Figure_05	05l	01	figures/Figure_05/05l/01_analyze_chrombpnet_significant_as_variants.py	PARTIAL_PANEL	Calculate ChromBPNet-significant ATAC-seq AS-variant density; panel 5l uses the density component.	split_enhancer_by_tissue_count.md	18	16642-18212
+Figure_07	07c	01	figures/Figure_07/07c/01_calculate_selection_enrichment.py	PANEL_CODE	Calculate chromatin-state enrichment for four selection scans.	selection_signals.md	2	6-860
+Figure_07	07c	02	figures/Figure_07/07c/02_plot_selection_enrichment.py	PANEL_CODE	Create the selection-enrichment dot/box/heatmap plots.	selection_signals.md	3	862-1286
+Figure_08	08a	01	figures/Figure_08/08a/Figure_08a_01_liftover_sheep_states_to_hg38.sh	PANEL_INPUT	Project sheep chromatin-state intervals to hg38 for the Figure 8a analysis.	coordinate-conversion scripts	1	NA
+Figure_08	08a	02	figures/Figure_08/08a/Figure_08a_02_convert_hg38_to_hg19.sh	PANEL_INPUT	Convert projected intervals from hg38 to hg19 for GWAS/LDSC annotations.	coordinate-conversion scripts	2	NA
+Figure_08	08b	01	figures/Figure_08/08b/Figure_08b_plot.py	PANEL_CODE	Plot the submitted human and sheep E1-E9 emission heatmaps.	sheep-epimap-code.zip	fig8b	NA
+Figure_08	08c	01	figures/Figure_08/08c/Figure_08c_01_classify_CRE_E1_E9.sh	PANEL_INPUT	Classify E1-E9 conserved regulatory elements represented in Figure 8c.	sheep-epimap-code.zip	cre-classification	NA
+Figure_08	08d	01	figures/Figure_08/08d/Figure_08d_prepare_merged_classification.py	PANEL_INPUT	Prepare the merged CRE-class composition table.	sheep-epimap-code.zip	fig8d-input	NA
+Figure_08	08d	02	figures/Figure_08/08d/Figure_08d_plot.py	PANEL_CODE	Plot the submitted CRE-class composition panel.	sheep-epimap-code.zip	fig8d	NA
+Figure_08	08e	01	figures/Figure_08/08e/Figure_08e_prepare_conservation_scores.py	PANEL_INPUT	Calculate conservation scores consumed by Figure 8e.	sheep-epimap-code.zip	fig8e-input	NA
+Figure_08	08e	02	figures/Figure_08/08e/Figure_08e_plot.py	PANEL_CODE	Plot the submitted phyloP comparison among CRE classes.	sheep-epimap-code.zip	fig8e	NA
+Figure_08	08f	01	figures/Figure_08/08f/Figure_08f_plot.py	PANEL_CODE	Plot the submitted CRE-class GWAS UpSet panel.	sheep-epimap-code.zip	fig8f	NA
+Figure_08	08f-08g	01	figures/Figure_08/08f-08g/Figure_08f_08g_01_prepare_GWAS_plotting_table.py	PANEL_INPUT	Prepare the LDSC/GWAS statistics table consumed by Figure 8f and 8g.	sheep-epimap-code.zip	fig8fg-input	NA
+Figure_08	08f-08g	02	figures/Figure_08/08f-08g/Figure_08f_08g_02_summarize_LDSC_CTS.py	PANEL_INPUT	Summarize cell-type-specific LDSC results for Figure 8f and 8g.	sheep-epimap-code.zip	fig8fg-summary	NA
+Figure_08	08g	01	figures/Figure_08/08g/Figure_08g_plot.py	PANEL_CODE	Plot the submitted sfCRE trait-by-tissue enrichment panel.	sheep-epimap-code.zip	fig8g	NA
+Shared_Workflows	enhancer_sharing	01	figures/Shared_Workflows/enhancer_sharing/01_split_enhancers_by_tissue_count.py	PANEL_INPUT	Validate the 43-tissue activity matrix and split enhancers by the number of active tissues.	split_enhancer_by_tissue_count.md	1	5-208
+Shared_Workflows	enhancer_sharing	02	figures/Shared_Workflows/enhancer_sharing/02_link_enhancers_to_target_genes.py	PANEL_INPUT	Collapse the 43 tissue counts into five enhancer-sharing classes and link enhancers to target genes.	split_enhancer_by_tissue_count.md	2	212-715
+Shared_Workflows	local_association_plotting	01	figures/Shared_Workflows/local_association_plotting/01_plot_local_gwas_eqtl.py	PANEL_INPUT	Reusable local GWAS/eQTL plotting engine; the uploaded source did not contain panel-specific commands.	local_gwas_eqtl_manhattan.py	0	1-2111
+Shared_Workflows	multi_tissue_locus_tracks	01	figures/Shared_Workflows/multi_tissue_locus_tracks/01_plot_multi_tissue_locus_tracks.R	PANEL_INPUT	Reusable multi-tissue locus-track engine; the uploaded source did not contain the submitted panels' exact regions and commands.	track_visualization.md	14	2135-3422
+Shared_Workflows	multi_tissue_locus_tracks	02	figures/Shared_Workflows/multi_tissue_locus_tracks/02_example_multi_tissue_locus_tracks.sh	PANEL_INPUT	Example commands supplied with the reusable locus-track engine; these are not assigned to a submitted panel.	track_visualization.md	17	3457-3474
+Supplementary_Figure_08	08d	01	figures/Supplementary_Figure_08/08d/01_compute_predicted_accessibility_profiles.sh	PANEL_CODE	Compute ChromBPNet-predicted accessibility profiles by chromatin state.	conservation_analysis.md	1	3-152
+Supplementary_Figure_08	08d	02	figures/Supplementary_Figure_08/08d/02_merge_accessibility_profiles.sh	PANEL_CODE	Merge predicted-accessibility profiles across tissues and states.	conservation_analysis.md	2	154-472
+Supplementary_Figure_12	12a	01	figures/Supplementary_Figure_12/12a/01_build_motif_summary_panels.R	PANEL_CODE	Build the full 118-motif summary panel.	Pasted markdown.md	35	1178-1425
+Supplementary_Figure_13	13a	01	figures/Supplementary_Figure_13/13a/01_build_footprint_summary.py	PANEL_CODE	Build the motif footprint summary panel.	deeplearning.md	127	15328-15813
+Supplementary_Figure_13	13a	02	figures/Supplementary_Figure_13/13a/02_run_footprint_summary.sh	PANEL_CODE	Run the motif footprint summary plot.	deeplearning.md	128	15815-15825
+Supplementary_Figure_01	01a-01f	01	pipelines/1.Data preprocessing/10_PCA_for_each_assay_generate_input.sh	PANEL_INPUT	Generate normalized signal matrices used for the six assay-specific tissue PCA panels.	SheepEpimap.md	10	861-925
+Supplementary_Figure_01	01a-01f	02	pipelines/1.Data preprocessing/11_PCA_for_each_assay_prepare_table.sh	PANEL_INPUT	Prepare the assay-specific PCA coordinate tables and replicate labels.	SheepEpimap.md	11	931-953
+Supplementary_Figure_01	01a-01f	03	pipelines/1.Data preprocessing/12_PCA_for_each_assay_plot.R	PANEL_CODE	Plot the six RNA-seq, ATAC-seq and histone-mark PCA panels across sheep tissues.	SheepEpimap.md	12	959-1030

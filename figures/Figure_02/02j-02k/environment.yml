@@ -1,0 +1,14 @@
+name: sheep_epimap_hic
+channels:
+  - conda-forge
+  - bioconda
+  - hcc
+  - defaults
+dependencies:
+  - python=3.10
+  - juicer
+  - bwa
+  - samtools
+  - numpy
+  - pandas
+  - matplotlib
