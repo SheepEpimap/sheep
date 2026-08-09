@@ -1,4 +1,4 @@
-# Figure 07 — panel 07c
+# Processing note.
 
 Mapping status: **direct**.
 

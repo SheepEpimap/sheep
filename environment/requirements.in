@@ -5,8 +5,6 @@ modisco-lite
 numpy
 pandas
 pyBigWig
-pysam
 scikit-learn
 scipy
 seaborn
-tspex

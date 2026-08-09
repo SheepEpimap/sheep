@@ -106,7 +106,7 @@ p6 <- hits_all_anno %>%
   theme(
     axis.text.y   = element_blank(),
     axis.ticks.y  = element_blank(),
-    legend.position = "none"     # ←
+    legend.position = "none"  # Processing note.
   )
 
 
@@ -119,7 +119,7 @@ p7 <- hits_all_anno %>%
   mutate(
     region_type = factor(region_type, levels = names(cmap_region_type)),
     motif_name = factor(motif_name, levels = rev(motif_order))
-  ) %>%   # ←   )
+  ) %>%  # Processing note.
   ggplot(aes(y = motif_name, x = n_hits_total)) +
   geom_col(aes(fill = region_type), position = "fill", alpha = 0.7) +
   scale_fill_manual(values = cmap_region_type) +
@@ -127,7 +127,7 @@ p7 <- hits_all_anno %>%
   theme(
     axis.text.y   = element_blank(),
     axis.ticks.y  = element_blank(),
-    legend.position = "none"     # ←
+    legend.position = "none"  # Processing note.
   )
 
 p8 <- hits_all_anno %>%
@@ -170,7 +170,7 @@ p10 <- hit_dyad_dist_agg %>%
   theme(
     axis.text.y   = element_blank(),
     axis.ticks.y  = element_blank(),
-    legend.position = "none"     # ←
+    legend.position = "none"  # Processing note.
   ) +
   xlab("distance bin (bp)") +
   ylab(NULL) +

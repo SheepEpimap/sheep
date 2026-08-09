@@ -1,4 +1,4 @@
-# Shared Workflows — panel multi_tissue_locus_tracks
+# Processing note.
 
 Mapping status: **supporting**.
 

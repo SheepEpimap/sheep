@@ -269,7 +269,7 @@ def main():
         as_peak_ids = set(as_peak_df["variant_id"])
 
         # -------------------------
-        # 2. test het = AS_in_peak ∪ nonAS_in_peak
+        # Processing note.
         # -------------------------
         nonas_peak_df = read_variant_5col(nonas_in_peak_file)
 

@@ -1,4 +1,4 @@
-# Extended Data Figure 06 — panel 06d-06f
+# Processing note.
 
 Mapping status: **partial**.
 

@@ -17,7 +17,6 @@ readr
 reshape2
 rtracklayer
 scales
-spp
 stringr
 tidyr
 tidyverse

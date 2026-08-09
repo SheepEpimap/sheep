@@ -20,7 +20,7 @@ matplotlib.rcParams["axes.unicode_minus"] = False
 import matplotlib.pyplot as plt
 
 
-window = 100          # footprint  :±100bp
+window = 100  # Processing note.
 tissue_file = "/data/home/sczd644/run/zsw_chrombpnet/tissue.txt"
 
 motifs_of_interest = None

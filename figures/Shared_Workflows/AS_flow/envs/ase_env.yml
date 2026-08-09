@@ -1,0 +1,3 @@
+name: ase_env
+channels: [conda-forge, bioconda, defaults]
+dependencies: [gatk4, samtools, bcftools, htslib, bedtools, r-base, r-data.table]

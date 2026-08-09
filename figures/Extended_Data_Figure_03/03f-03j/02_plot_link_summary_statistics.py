@@ -14,7 +14,7 @@ plot_topN_links_to_pdfs.py
    - gene degree  ( ) PDF
    -   pair   PDF( ,rep  ; ,r,p;  topX/topY  )
 
-  Python 3.7/3.8(  "str | None"  ).
+  Python 3.7/3.8(  “str | None”  ).
 """
 
 import os
@@ -426,7 +426,7 @@ def plot_one_pair(enh: str,
 
         ax.scatter(
             [xi], [yi],
-            s=point_size,           #  :matplotlib   s  " (pt^2)"
+            s=point_size,  # Processing note.
             c=col,
             marker=marker,
             alpha=alpha,

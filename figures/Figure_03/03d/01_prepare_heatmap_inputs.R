@@ -142,7 +142,7 @@ cluster_order_df <- data.frame(
 write.table(cluster_order_df, "cluster_order.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
 message("✅  save: cluster_order.tsv")
 
-message("📊  file !")
+message("📊  file ！")
 message("📁  file :")
 message("  - heatmap_data.tsv")
 message("  - bottom_bar_data.tsv")

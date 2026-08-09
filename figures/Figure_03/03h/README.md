@@ -1,4 +1,4 @@
-# Figure 03 — panel 03h
+# Processing note.
 
 Mapping status: **partial**.
 

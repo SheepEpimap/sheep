@@ -1,4 +1,4 @@
-# Supplementary Figure 13 — panel 13a
+# Processing note.
 
 Mapping status: **direct**.
 

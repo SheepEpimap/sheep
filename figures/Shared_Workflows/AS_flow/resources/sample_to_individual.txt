@@ -1,0 +1,4 @@
+# sample_id                   individual_id
+# Replace/add rows using whitespace-separated sample and individual IDs.
+ATAC_thymus_39                23121795D
+ATAC_abomasum_39              23121795D

@@ -714,7 +714,7 @@ def prepare_gwas_data() -> tuple[pd.DataFrame, pd.DataFrame, dict[str, str]]:
         & ~df["trait_id"].isin(DROP_TRAIT_IDS)
     ].copy()
 
-    # Keep only trait × tissue pairs represented in all four CRE classes.
+    # Processing note.
     df["pair_id"] = df["trait_id"].astype(str) + "|" + df["tissue"].astype(str)
     common_pairs = (
         df.groupby("pair_id")["class"]

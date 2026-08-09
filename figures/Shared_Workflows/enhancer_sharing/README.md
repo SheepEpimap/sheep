@@ -1,4 +1,4 @@
-# Shared Workflows — panel enhancer_sharing
+# Processing note.
 
 Mapping status: **supporting**.
 

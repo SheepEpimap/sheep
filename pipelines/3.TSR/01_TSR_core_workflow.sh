@@ -17,7 +17,7 @@ vim 01_merge.sh
 #!/usr/bin/env bash
 while read -r id; do
   echo "$id"
-  for state in E1 E2 E3 E4 E5 E6 E7 E8 E9 E10 E11; do   # ← do is present
+  for state in E1 E2 E3 E4 E5 E6 E7 E8 E9 E10 E11; do  # Processing note.
     cat \
       "/vol2/mengzhu/SheepFANNG/04_ChromHMM_noblacklist_modif/Rep1/LearnModel_11/new_LearnModel_11/state_variability/${id}_39_${state}.bed" \
       "/vol2/mengzhu/SheepFANNG/04_ChromHMM_noblacklist_modif/Rep2/LearnModel_11/new_LearnModel_11/state_variability/${id}_40_${state}.bed" \

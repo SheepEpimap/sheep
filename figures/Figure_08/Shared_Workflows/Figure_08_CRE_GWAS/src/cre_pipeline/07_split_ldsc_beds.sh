@@ -21,12 +21,12 @@ shopt -s nullglob
 
 : "${WORKDIR:?Set E1E9_WORKDIR/WORKDIR in the paths configuration}"
 
-# ── Source 1: human CRE ─────────────────────────────────
+# Processing note.
 HUMAN_DIR="${WORKDIR}/CRE_TSR_E5_hg19"
 OUT_HUMAN="${WORKDIR}/LDSC_human_CRE_hg19"
 mkdir -p "${OUT_HUMAN}"
 
-# ── Source 2: sheep-projected sfCRE ─────────────────────
+# Processing note.
 PROJ_DIR="${WORKDIR}/sf_sheepE5_TSRlabeled/hg19"
 OUT_PROJ="${WORKDIR}/LDSC_sheep_projection_hg19"
 mkdir -p "${OUT_PROJ}"
@@ -38,7 +38,7 @@ TISSUES=(Adipose Colon Cortex Heart Liver Lung Muscle Ovary Sintest Spleen Stoma
 log() { echo "[$(date +%H:%M:%S)] $*" >&2; }
 
 # =========================================================
-# Source 1: human CRE — slice by (CRE_class, TSR_label)
+# Processing note.
 # =========================================================
 log "===== Source 1: human CRE slices ====="
 
@@ -70,7 +70,7 @@ for cre in "${CRE_CLASSES[@]}"; do
 done
 
 # =========================================================
-# Source 2: sheep projection — slice by TSR_label only
+# Processing note.
 #   (CRE_class is sfCRE by construction)
 # =========================================================
 log "===== Source 2: sheep projection slices ====="

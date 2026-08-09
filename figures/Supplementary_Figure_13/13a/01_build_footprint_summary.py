@@ -453,8 +453,8 @@ def main():
     configure_editable_text(args.font_ttf)
 
     fig.savefig(out_png, dpi=300, bbox_inches="tight")
-    fig.savefig(out_pdf, bbox_inches="tight")   # ✅   PDF( : )
-    fig.savefig(out_svg, bbox_inches="tight")   # ✅  :SVG
+    fig.savefig(out_pdf, bbox_inches="tight")  # Processing note.
+    fig.savefig(out_svg, bbox_inches="tight")  # Processing note.
     plt.close(fig)
 
     print(f"[OK] saved figure: {out_png}")

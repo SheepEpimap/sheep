@@ -1,0 +1,3 @@
+name: rnaseq_tools
+channels: [conda-forge, bioconda, defaults]
+dependencies: [python=3.11, star, samtools, salmon, trim-galore, stringtie]

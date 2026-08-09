@@ -1,0 +1,3 @@
+name: atac_tools
+channels: [conda-forge, bioconda, defaults]
+dependencies: [python=3.11, bwa, samtools, bedtools, macs2, trim-galore, genmap, r-base, r-spp]

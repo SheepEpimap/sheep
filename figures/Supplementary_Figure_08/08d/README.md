@@ -1,4 +1,4 @@
-# Supplementary Figure 08 — panel 08d
+# Processing note.
 
 Mapping status: **direct**.
 

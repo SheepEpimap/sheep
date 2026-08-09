@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.R text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.txt text eol=lf
+*.zip binary
+*.gz binary
+*.bam binary
+*.bai binary
+*.h5 binary

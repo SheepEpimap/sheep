@@ -1,4 +1,4 @@
-# Extended Data Figure 06 — panel 06a-06c
+# Processing note.
 
 Mapping status: **direct**.
 

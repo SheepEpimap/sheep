@@ -1,4 +1,4 @@
-# Figure 05 — panel 05j-05k
+# Processing note.
 
 Mapping status: **partial**.
 

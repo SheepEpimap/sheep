@@ -38,7 +38,7 @@ annotate_file() {
     esac
     local out="${OUT_DIR}/${base}.TSR.bed"
 
-    # 1) decode col4 (hg38_key) → hg38 bed with CRE ID = col4
+    # Processing note.
     local hg38="${TMP_DIR}/${base}.hg38.bed"
     awk 'BEGIN{FS=OFS="\t"}
          NF>=4{ split($4,a,":"); if(length(a)<2) next
@@ -52,7 +52,7 @@ annotate_file() {
         return 0
     fi
 
-    # 2) intersect with TSR labeled → (cre_id, tsr_label, overlap_bp) rows
+    # Processing note.
     #    with -wao: every -a row gets at least one -b row (label '.' if no overlap)
     local isx="${TMP_DIR}/${base}.isx.tsv"
     bedtools intersect -a "${hg38}" -b "${LABELED}" -wao \

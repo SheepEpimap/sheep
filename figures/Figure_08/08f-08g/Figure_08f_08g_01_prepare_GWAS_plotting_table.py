@@ -46,7 +46,7 @@ df["signed_log10p"] = -np.log10(df["P"]) * np.sign(df["Coefficient"])
 df["signed_z"] = df["Coefficient"] / df["Coefficient_std_error"].replace(0, np.nan)
 df["signed_z"] = df["signed_z"].replace([np.inf, -np.inf], np.nan)
 
-# FDR 1: within each class across all trait × tissue tests
+# Processing note.
 df["FDR_by_class"] = np.nan
 
 for c in CLASSES:
@@ -57,7 +57,7 @@ for c in CLASSES:
             method="fdr_bh"
         )[1]
 
-# FDR 2: global across all trait × tissue × class tests
+# Processing note.
 df["FDR_global"] = multipletests(df["P"], method="fdr_bh")[1]
 
 df["sig_pos_by_class"] = (df["Coefficient"] > 0) & (df["FDR_by_class"] < 0.05)
@@ -117,7 +117,7 @@ summary_tissue_class.to_csv(
     index=False
 )
 
-# Paired comparison across the same trait × tissue pairs
+# Processing note.
 wide_z = df.pivot_table(
     index=["trait_id", "tissue"],
     columns="class",
@@ -250,7 +250,7 @@ plt.tight_layout()
 plt.savefig(FIG_DIR / "A2_B2_all_tissues_signed_z_diff_vs_sfCRE.pdf")
 plt.close()
 
-# Plot 4: tissue × class significant positive count heatmap
+# Processing note.
 count_mat = summary_tissue_class.pivot(
     index="tissue",
     columns="class",
@@ -276,7 +276,7 @@ plt.tight_layout()
 plt.savefig(FIG_DIR / "A2_B2_all_tissues_sig_pos_count_tissue_class_heatmap.pdf")
 plt.close()
 
-# Plot 5: tissue × class median signed Z heatmap
+# Processing note.
 z_mat = summary_tissue_class.pivot(
     index="tissue",
     columns="class",

@@ -8,7 +8,7 @@ set -euo pipefail
 HITS_DIR="/data/home/sczd644/run/zsw_chrombpnet/track/hits"
 BIGWIG="/vol2/zhuangziyang/4_compair/conservation_score/gerp_conservation_scores.ovis_aries.ARS-UI_Ramb_v3.0.bw"
 OUTDIR="/data/home/sczd644/run/zsw_chrombpnet/phylop_gerp_all"
-WINDOW="${1:-25}"                 #   ±25
+WINDOW="${1:-25}"  # Processing note.
 KEEP_TMP="${KEEP_TMP:-0}"         # 0= file;1=
 
 mkdir -p "$OUTDIR/results"

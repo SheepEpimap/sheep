@@ -48,7 +48,7 @@ while read -r id; do
 done < "$tissueList"
 
 rm -f pattern2tf.tmp tf2seq.tmp
-echo " !hits_tf.bed  , file  $outDir"
+echo " ！hits_tf.bed  , file  $outDir"
 
 mkdir -p /data/home/sczd644/run/zsw_chrombpnet/footprint/result
 #!/bin/bash

@@ -1,4 +1,4 @@
-# Figure 03 — panel 03d
+# Processing note.
 
 Mapping status: **direct, supporting**.
 

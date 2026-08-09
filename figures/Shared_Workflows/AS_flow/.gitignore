@@ -1,0 +1,43 @@
+# Generated workflow outputs
+/work/
+/logs/
+
+# Generated reference resources
+/resources/mappability/
+/resources/beagle_maps/
+/resources/*.chrom.sizes
+/resources/chroms.txt
+
+# Sequencing and genomics data
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bam
+*.bam.bai
+*.bai
+*.cram
+*.crai
+*.sam
+*.vcf
+*.vcf.gz
+*.vcf.gz.tbi
+*.tbi
+*.bcf
+*.bed.gz
+*.bigWig
+*.bw
+*.h5
+
+# Common temporary and editor files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+__pycache__/
+*.py[cod]
+.Rhistory
+.RData
+.Rproj.user/
