@@ -1,351 +1,228 @@
 #!/usr/bin/env bash
-# Extracted and reorganized from user-supplied analysis notes.
-# Review PROJECT_ROOT and all input paths before execution.
+# Human hg38 E1-E9 chromatin states to sheep ARS-UI_Ramb_v3.0
+# (GCF_016772045.2), followed by per-tissue CRE classification in sheep V3
+# coordinates. This is the workflow used for Figure 8b-d.
 set -euo pipefail
+trap 'echo "[ERROR] line ${LINENO}, exit code $?" >&2' ERR
 
-# =========================================================
-# =========================================================
-INDIR="/vol2/mengzhu/SheepFANNG/04_ChromHMM_noblacklist_modif/Merge_chromatin_state/state_variability/All_chromatin_state"
-OUTROOT="/vol2/zhangshiwen/sheep_cor/liftover_to_hg38"
+NCPU="${SLURM_CPUS_PER_TASK:-12}"
+LIFTOVER_BIN="${LIFTOVER_BIN:-liftOver}"
+HUMAN_TO_SHEEP_CHAIN="${HUMAN_TO_SHEEP_CHAIN:?Set HUMAN_TO_SHEEP_CHAIN to hg38ToGCF_016772045.2.over.chain.gz}"
+SHEEP_V3_CHROM_MAP="${SHEEP_V3_CHROM_MAP:?Set SHEEP_V3_CHROM_MAP to the V3 numeric-to-NC chromosome map}"
+HUMAN_HG38_DIR="${HUMAN_HG38_DIR:?Set HUMAN_HG38_DIR to the human hg38 E1-E9 BED directory}"
+SHEEP_V3_DIR="${SHEEP_V3_DIR:?Set SHEEP_V3_DIR to the sheep V3 E1-E9 BED directory}"
+WORKDIR="${WORKDIR:?Set WORKDIR to an output directory}"
 
-TMPDIR="${OUTROOT}/tmp"
-STEP1_DIR="${OUTROOT}/01_v2_sourceNC"
-STEP2_DIR="${OUTROOT}/02_v3_raw"
-STEP3_DIR="${OUTROOT}/03_v3_for_hg38"
-STEP4_DIR="${OUTROOT}/04_hg38_raw"
-STEP5_DIR="${OUTROOT}/05_hg38_final"
-UNMAP1_DIR="${OUTROOT}/unmapped_v2_to_v3"
-UNMAP2_DIR="${OUTROOT}/unmapped_v3_to_hg38"
+MINMATCH_HG38_V3="${MINMATCH_HG38_V3:-0.1}"
+OVERLAP_FRAC="${OVERLAP_FRAC:-0.5}"
+LIFTED_DIR="${WORKDIR}/lifted"
+CLASS_DIR="${WORKDIR}/classified"
+SHEEP_REF_DIR="${WORKDIR}/sheep_v3_ref"
+TMP_DIR="${WORKDIR}/tmp"
 
-mkdir -p "${TMPDIR}" "${STEP1_DIR}" "${STEP2_DIR}" "${STEP3_DIR}" \
-         "${STEP4_DIR}" "${STEP5_DIR}" "${UNMAP1_DIR}" "${UNMAP2_DIR}"
+STATES=(E1 E2 E3 E4 E5 E6 E7 E8 E9)
+HUMAN_TISSUES=(Adipose Colon Cortex Heart Liver Lung Muscle Ovary Sintest Spleen Stomach Testis)
+SHEEP_TISSUES=(adipose colon cerebral-cortex heart liver lung muscle ovary jejunum spleen abomasum testis)
 
-SUMMARY="${OUTROOT}/liftover_summary.tsv"
+log() { echo "[$(date +%H:%M:%S)] $*" >&2; }
 
-# =========================================================
-# =========================================================
-CHAIN_V2_TO_V3="/vol2/mengzhu/genome/GCF_016772045.1ToGCF_016772045.2.over.chain.gz"
-CHAIN_V3_TO_HG38="/vol2/mengzhu/genome/GCF_016772045.2ToHg38_chr.over.chain.gz"
-
-MAP_V2_NC_TO_CHR="/data/home/sczd644/run/zsw_chrombpnet/phylop/v2NCtochr.txt"   # NC_056054.1 -> chr1
-MAP_V3_NUM_TO_NC="/data/home/sczd644/run/zsw_chrombpnet/phylop/v3NCtochr.txt"   # 1 -> NC_056054.1
-
-LIFTOVER_MINMATCH="0.8"
-
-# =========================================================
-# =========================================================
-for cmd in liftOver awk sort zcat wc head basename; do
+for cmd in "${LIFTOVER_BIN}" awk bedtools sort zcat sed xargs; do
     command -v "${cmd}" >/dev/null 2>&1 || {
         echo "[ERROR] command not found: ${cmd}" >&2
         exit 1
     }
 done
-
-# =========================================================
-# =========================================================
-log() {
-    echo "[INFO] $*" >&2
-}
-
-die() {
-    echo "[ERROR] $*" >&2
+[[ -f "${HUMAN_TO_SHEEP_CHAIN}" ]] || {
+    echo "[ERROR] chain not found: ${HUMAN_TO_SHEEP_CHAIN}" >&2
     exit 1
 }
-
-done_file() {
-    [[ -s "$1" ]]
+[[ -f "${SHEEP_V3_CHROM_MAP}" ]] || {
+    echo "[ERROR] chromosome map not found: ${SHEEP_V3_CHROM_MAP}" >&2
+    exit 1
 }
+mkdir -p "${LIFTED_DIR}" "${CLASS_DIR}" "${SHEEP_REF_DIR}" "${TMP_DIR}"
 
-exists_file() {
-    [[ -e "$1" ]]
-}
+# The query assembly in the chain is sheep V3. Detect its chromosome naming
+# convention so all lifted intervals can be normalized to numeric chromosomes.
+V3_QNAME=$(set +o pipefail; zcat "${HUMAN_TO_SHEEP_CHAIN}" | awk '/^chain/{print $8; exit}')
+case "${V3_QNAME}" in
+    NC_*) V3_CHAIN_STYLE=nc ;;
+    chr*) V3_CHAIN_STYLE=chr ;;
+    [0-9]*) V3_CHAIN_STYLE=num ;;
+    *) V3_CHAIN_STYLE=other ;;
+esac
+log "Chain query assembly: ${V3_QNAME} (style=${V3_CHAIN_STYLE})"
 
-line_count() {
-    if [[ -e "$1" ]]; then
-        wc -l < "$1"
-    else
-        echo 0
-    fi
-}
+NC2NUM="${TMP_DIR}/v3nc2num.tsv"
+awk 'BEGIN{OFS="\t"}{print $2, $1}' "${SHEEP_V3_CHROM_MAP}" > "${NC2NUM}"
 
-calc_ratio() {
-    local num="$1"
-    local den="$2"
-    awk -v n="$num" -v d="$den" 'BEGIN{
-        if (d == 0) {
-            print "NA"
-        } else {
-            printf "%.6f\n", n/d
-        }
-    }'
-}
-
-detect_style() {
-    local name="$1"
-    if [[ "$name" =~ ^chr ]]; then
-        echo "chr"
-    elif [[ "$name" =~ ^NC_ ]]; then
-        echo "nc"
-    elif [[ "$name" =~ ^[0-9]+$ ]]; then
-        echo "num"
-    else
-        echo "other"
-    fi
-}
-
-rename_first_col_by_map() {
-    local mapfile="$1"
-    local infile="$2"
-    local outfile="$3"
-
-    awk 'BEGIN{FS=OFS="\t"}
-    NR==FNR {
-        map[$1]=$2
-        next
-    }
-    {
-        if ($1 in map) {
-            $1 = map[$1]
-            print
-        }
-    }' "$mapfile" "$infile" > "$outfile"
-}
-
-adjust_nc_suffix_first_col() {
-    local infile="$1"
-    local outfile="$2"
-    local suffix="$3"
-
-    awk -v suf="$suffix" 'BEGIN{FS=OFS="\t"}
-    {
-        sub(/\.[0-9]+$/, suf, $1)
-        print
-    }' "$infile" > "$outfile"
-}
-
-sort_bed_file() {
-    local infile="$1"
-    local outfile="$2"
-    LC_ALL=C sort -k1,1V -k2,2n -k3,3n "$infile" > "$outfile"
-}
-
-# =========================================================
-# UCSC chain:
-# =========================================================
-read -r V2V3_TARGET_NAME V2V3_SOURCE_NAME < <(
-    zcat "${CHAIN_V2_TO_V3}" | awk '/^chain/ {print $3, $8; exit}'
-)
-
-read -r V3HG_TARGET_NAME V3HG_SOURCE_NAME < <(
-    zcat "${CHAIN_V3_TO_HG38}" | awk '/^chain/ {print $3, $8; exit}'
-)
-
-log "CHAIN_V2_TO_V3 target : ${V2V3_TARGET_NAME}"
-log "CHAIN_V2_TO_V3 source : ${V2V3_SOURCE_NAME}"
-log "CHAIN_V3_TO_HG38 target : ${V3HG_TARGET_NAME}"
-log "CHAIN_V3_TO_HG38 source : ${V3HG_SOURCE_NAME}"
-
-STYLE_V2V3_TARGET=$(detect_style "${V2V3_TARGET_NAME}")
-STYLE_V2V3_SOURCE=$(detect_style "${V2V3_SOURCE_NAME}")
-STYLE_V3HG_SOURCE=$(detect_style "${V3HG_SOURCE_NAME}")
-STYLE_V3HG_TARGET=$(detect_style "${V3HG_TARGET_NAME}")
-
-log "style chain1 source = ${STYLE_V2V3_SOURCE}"
-log "style chain1 target = ${STYLE_V2V3_TARGET}"
-log "style chain2 source = ${STYLE_V3HG_SOURCE}"
-log "style chain2 target = ${STYLE_V3HG_TARGET}"
-
-V2V3_SOURCE_SUFFIX=$(echo "${V2V3_SOURCE_NAME}" | sed -E 's/^.*(\.[0-9]+)$/\1/')
-V2V3_TARGET_SUFFIX=$(echo "${V2V3_TARGET_NAME}" | sed -E 's/^.*(\.[0-9]+)$/\1/')
-
-# =========================================================
-# =========================================================
-
-CHR_TO_V2SRC_NC="${TMPDIR}/v2_chr_to_chain1_sourceNC.tsv"
-if done_file "${CHR_TO_V2SRC_NC}"; then
-    log "skip map: ${CHR_TO_V2SRC_NC}"
-else
-    log "building map: ${CHR_TO_V2SRC_NC}"
-    awk -v suf="${V2V3_SOURCE_SUFFIX}" 'BEGIN{OFS="\t"}
-    {
-        nc=$1
-        sub(/\.[0-9]+$/, suf, nc)
-        print $2, nc
-    }' "${MAP_V2_NC_TO_CHR}" > "${CHR_TO_V2SRC_NC}"
-fi
-
-V3_NC_TO_CHR="${TMPDIR}/v3_nc_to_chr.tsv"
-if done_file "${V3_NC_TO_CHR}"; then
-    log "skip map: ${V3_NC_TO_CHR}"
-else
-    log "building map: ${V3_NC_TO_CHR}"
-    awk 'BEGIN{OFS="\t"} {print $2, "chr"$1}' "${MAP_V3_NUM_TO_NC}" > "${V3_NC_TO_CHR}"
-fi
-
-V3_NUM_TO_CHR="${TMPDIR}/v3_num_to_chr.tsv"
-if done_file "${V3_NUM_TO_CHR}"; then
-    log "skip map: ${V3_NUM_TO_CHR}"
-else
-    log "building map: ${V3_NUM_TO_CHR}"
-    awk 'BEGIN{OFS="\t"} {print $1, "chr"$1}' "${MAP_V3_NUM_TO_NC}" > "${V3_NUM_TO_CHR}"
-fi
-
-# =========================================================
-# =========================================================
-echo -e "file\torig_lines\tv2_sourceNC_lines\tv3_raw_lines\tv3_for_hg38_lines\thg38_raw_lines\thg38_final_lines\tunmapped_v2_to_v3\tunmapped_v3_to_hg38\tv2_to_v3_rate\tv3_to_hg38_rate\tfinal_to_orig_rate" > "${SUMMARY}"
-
-# =========================================================
-# =========================================================
-shopt -s nullglob
-files=( "${INDIR}"/*_E*.bed )
-
-if [[ ${#files[@]} -eq 0 ]]; then
-    die "no files matched: ${INDIR}/*_E*.bed"
-fi
-
-for bed in "${files[@]}"; do
-    base=$(basename "${bed}" .bed)
-    log "processing: ${base}"
-
-    [[ -s "${bed}" ]] || {
-        log "skip empty file: ${bed}"
-        continue
-    }
-
-    NCOLS=$(awk 'NR==1{print NF; exit}' "${bed}")
-    [[ -n "${NCOLS}" ]] || die "cannot detect column count: ${bed}"
-
-    in_style=$(detect_style "$(awk 'NR==1{print $1; exit}' "${bed}")")
-    log "${base}: input style = ${in_style}, columns = ${NCOLS}"
-
-    STEP1_OUT="${STEP1_DIR}/${base}.v2sourceNC.bed"
-    STEP2_OUT="${STEP2_DIR}/${base}.v3raw.bed"
-    STEP3_OUT="${STEP3_DIR}/${base}.v3forHg38.bed"
-    STEP4_OUT="${STEP4_DIR}/${base}.hg38.raw.bed"
-    STEP5_OUT="${STEP5_DIR}/${base}.hg38.bed"
-
-    UNMAP1="${UNMAP1_DIR}/${base}.v2_to_v3.unmapped.bed"
-    UNMAP2="${UNMAP2_DIR}/${base}.v3_to_hg38.unmapped.bed"
-
-    # -----------------------------------------------------
-    # Step 1: input -> chain1 source
-    # -----------------------------------------------------
-    if done_file "${STEP1_OUT}"; then
-        log "${base}: skip step1"
-    else
-        log "${base}: step1 input -> chain1 source"
-
-        step1_key="${in_style},${STYLE_V2V3_SOURCE}"
-        case "${step1_key}" in
-            chr,nc)
-                rename_first_col_by_map "${CHR_TO_V2SRC_NC}" "${bed}" "${STEP1_OUT}"
-                ;;
-            nc,nc)
-                adjust_nc_suffix_first_col "${bed}" "${STEP1_OUT}" "${V2V3_SOURCE_SUFFIX}"
-                ;;
-            chr,chr)
-                cp "${bed}" "${STEP1_OUT}"
-                ;;
-            *)
-                die "${base}: unsupported step1 style conversion: input=${in_style}, chain1_source=${STYLE_V2V3_SOURCE}"
-                ;;
-        esac
-    fi
-
-    # -----------------------------------------------------
-    # Step 2: v2 -> v3
-    # -----------------------------------------------------
-    if done_file "${STEP2_OUT}" && exists_file "${UNMAP1}"; then
-        log "${base}: skip step2"
-    else
-        log "${base}: step2 liftOver v2 -> v3"
-        liftOver -minMatch="${LIFTOVER_MINMATCH}" -bedPlus="${NCOLS}" \
-            "${STEP1_OUT}" \
-            "${CHAIN_V2_TO_V3}" \
-            "${STEP2_OUT}" \
-            "${UNMAP1}"
-    fi
-
-    # -----------------------------------------------------
-    # Step 3: chain1 target -> chain2 source
-    # -----------------------------------------------------
-    if done_file "${STEP3_OUT}"; then
-        log "${base}: skip step3"
-    else
-        log "${base}: step3 bridge chain1 target -> chain2 source"
-
-        step3_key="${STYLE_V2V3_TARGET},${STYLE_V3HG_SOURCE}"
-        case "${step3_key}" in
-            nc,chr)
-                rename_first_col_by_map "${V3_NC_TO_CHR}" "${STEP2_OUT}" "${STEP3_OUT}"
-                ;;
-            num,chr)
-                rename_first_col_by_map "${V3_NUM_TO_CHR}" "${STEP2_OUT}" "${STEP3_OUT}"
-                ;;
-            chr,chr)
-                cp "${STEP2_OUT}" "${STEP3_OUT}"
-                ;;
-            nc,nc)
-                cp "${STEP2_OUT}" "${STEP3_OUT}"
-                ;;
-            *)
-                die "${base}: unsupported bridge style: chain1_target=${STYLE_V2V3_TARGET}, chain2_source=${STYLE_V3HG_SOURCE}"
-                ;;
-        esac
-    fi
-
-    # -----------------------------------------------------
-    # Step 4: v3 -> hg38
-    # -----------------------------------------------------
-    if done_file "${STEP4_OUT}" && exists_file "${UNMAP2}"; then
-        log "${base}: skip step4"
-    else
-        log "${base}: step4 liftOver v3 -> hg38"
-        liftOver -minMatch="${LIFTOVER_MINMATCH}" -bedPlus="${NCOLS}" \
-            "${STEP3_OUT}" \
-            "${CHAIN_V3_TO_HG38}" \
-            "${STEP4_OUT}" \
-            "${UNMAP2}"
-    fi
-
-    # -----------------------------------------------------
-    # -----------------------------------------------------
-    if done_file "${STEP5_OUT}"; then
-        log "${base}: skip step5"
-    else
-        log "${base}: step5 finalize hg38 names"
-
-        case "${STYLE_V3HG_TARGET}" in
-            chr)
-                sort_bed_file "${STEP4_OUT}" "${STEP5_OUT}"
-                ;;
-            num)
-                awk 'BEGIN{FS=OFS="\t"} {$1="chr"$1; print}' "${STEP4_OUT}" \
-                | LC_ALL=C sort -k1,1V -k2,2n -k3,3n \
-                > "${STEP5_OUT}"
-                ;;
-            *)
-                die "${base}: unsupported human target style: ${STYLE_V3HG_TARGET}"
-                ;;
-        esac
-    fi
-
-    orig_n=$(line_count "${bed}")
-    step1_n=$(line_count "${STEP1_OUT}")
-    step2_n=$(line_count "${STEP2_OUT}")
-    step3_n=$(line_count "${STEP3_OUT}")
-    step4_n=$(line_count "${STEP4_OUT}")
-    step5_n=$(line_count "${STEP5_OUT}")
-    unmap1_n=$(line_count "${UNMAP1}")
-    unmap2_n=$(line_count "${UNMAP2}")
-
-    rate_v2_to_v3=$(calc_ratio "${step2_n}" "${orig_n}")
-    rate_v3_to_hg38=$(calc_ratio "${step4_n}" "${step3_n}")
-    rate_final_to_orig=$(calc_ratio "${step5_n}" "${orig_n}")
-
-    echo -e "${base}\t${orig_n}\t${step1_n}\t${step2_n}\t${step3_n}\t${step4_n}\t${step5_n}\t${unmap1_n}\t${unmap2_n}\t${rate_v2_to_v3}\t${rate_v3_to_hg38}\t${rate_final_to_orig}" >> "${SUMMARY}"
+# Prepare the per-tissue sheep V3 reference states in numeric chromosome style.
+for sheep_tissue in "${SHEEP_TISSUES[@]}"; do
+    for state in "${STATES[@]}"; do
+        src="${SHEEP_V3_DIR}/${sheep_tissue}_${state}.v3forHg38.bed"
+        dst="${SHEEP_REF_DIR}/${sheep_tissue}_${state}.v3.bed"
+        [[ -s "${dst}" ]] && continue
+        if [[ ! -s "${src}" ]]; then
+            : > "${dst}"
+            continue
+        fi
+        sed 's/^chr//' "${src}" | LC_ALL=C sort -k1,1V -k2,2n -k3,3n > "${dst}"
+    done
 done
 
-log "all done"
-log "final hg38 files: ${STEP5_DIR}"
-log "summary: ${SUMMARY}"
+process_lift() {
+    local human_tissue="$1" state="$2"
+    local out_v3="${LIFTED_DIR}/${human_tissue}_${state}.v3.bed"
+    local out_unmapped="${LIFTED_DIR}/${human_tissue}_${state}.unmapped"
+    [[ -s "${out_v3}" ]] && return 0
+
+    local hg38_file=""
+    local candidate
+    for candidate in \
+        "${HUMAN_HG38_DIR}/${human_tissue}_${state}.bed" \
+        "${HUMAN_HG38_DIR}/${human_tissue}_${state}.hg38.bed"; do
+        [[ -s "${candidate}" ]] && { hg38_file="${candidate}"; break; }
+    done
+    if [[ -z "${hg38_file}" ]]; then
+        : > "${out_v3}"
+        : > "${out_unmapped}"
+        echo "[WARN] ${human_tissue}_${state}: no hg38 input found" >&2
+        return 0
+    fi
+
+    local tmp="${TMP_DIR}/${human_tissue}_${state}"
+    awk -v OFS="\t" '{print $1,$2,$3,$1":"$2"-"$3}' "${hg38_file}" > "${tmp}.encoded.bed"
+    local columns
+    columns=$(awk 'NR==1{print NF;exit}' "${tmp}.encoded.bed")
+    "${LIFTOVER_BIN}" -minMatch="${MINMATCH_HG38_V3}" -bedPlus="${columns}" \
+        "${tmp}.encoded.bed" "${HUMAN_TO_SHEEP_CHAIN}" \
+        "${tmp}.v3raw.bed" "${out_unmapped}" || true
+
+    if [[ -s "${tmp}.v3raw.bed" ]]; then
+        case "${V3_CHAIN_STYLE}" in
+            nc)
+                awk 'BEGIN{FS=OFS="\t"} NR==FNR{m[$1]=$2;next} ($1 in m){$1=m[$1];print}' \
+                    "${NC2NUM}" "${tmp}.v3raw.bed" \
+                    | LC_ALL=C sort -k1,1V -k2,2n -k3,3n > "${out_v3}"
+                ;;
+            chr)
+                sed 's/^chr//' "${tmp}.v3raw.bed" \
+                    | LC_ALL=C sort -k1,1V -k2,2n -k3,3n > "${out_v3}"
+                ;;
+            *)
+                LC_ALL=C sort -k1,1V -k2,2n -k3,3n "${tmp}.v3raw.bed" > "${out_v3}"
+                ;;
+        esac
+    else
+        : > "${out_v3}"
+    fi
+    rm -f "${tmp}.encoded.bed" "${tmp}.v3raw.bed"
+    echo "[DONE] ${human_tissue}_${state}: $(wc -l < "${out_v3}") lifted intervals"
+}
+export -f process_lift
+export LIFTOVER_BIN HUMAN_TO_SHEEP_CHAIN MINMATCH_HG38_V3 HUMAN_HG38_DIR
+export LIFTED_DIR TMP_DIR V3_CHAIN_STYLE NC2NUM
+
+LIFT_TASKS="${TMP_DIR}/lift_tasks.txt"
+: > "${LIFT_TASKS}"
+for human_tissue in "${HUMAN_TISSUES[@]}"; do
+    for state in "${STATES[@]}"; do
+        echo "${human_tissue} ${state}" >> "${LIFT_TASKS}"
+    done
+done
+xargs -P "${NCPU}" -L 1 bash -c 'process_lift "$@"' _ < "${LIFT_TASKS}"
+rm -f "${LIFT_TASKS}"
+
+is_promoter() {
+    case "$1" in E1|E2|E3|E4) return 0 ;; *) return 1 ;; esac
+}
+to_midpoint() { awk -v OFS="\t" '{mid=int(($2+$3)/2); print $1,mid,mid+1,$4}' "$1"; }
+recover_by_name() { awk 'NR==FNR{ids[$4];next} $4 in ids' "$1" "$2" | sort -u; }
+
+process_classify() {
+    local human_tissue="$1" sheep_tissue="$2" state="$3"
+    local human_v3="${LIFTED_DIR}/${human_tissue}_${state}.v3.bed"
+    [[ -s "${human_v3}" ]] || return 0
+    local prefix="${CLASS_DIR}/${human_tissue}_${sheep_tissue}_${state}"
+    local sheep_same sheep_other
+    sheep_same=$(mktemp)
+    sheep_other=$(mktemp)
+
+    local ref="${SHEEP_REF_DIR}/${sheep_tissue}_${state}.v3.bed"
+    if [[ -s "${ref}" ]]; then
+        bedtools sort -i "${ref}" | bedtools merge -i - > "${sheep_same}"
+    else
+        : > "${sheep_same}"
+    fi
+
+    local other_files=() other_state other_file
+    for other_state in E1 E2 E3 E4 E5 E6 E7 E8 E9; do
+        [[ "${other_state}" == "${state}" ]] && continue
+        other_file="${SHEEP_REF_DIR}/${sheep_tissue}_${other_state}.v3.bed"
+        [[ -s "${other_file}" ]] && other_files+=("${other_file}")
+    done
+    if [[ ${#other_files[@]} -gt 0 ]]; then
+        cat "${other_files[@]}" | bedtools sort -i - | bedtools merge -i - > "${sheep_other}"
+    else
+        : > "${sheep_other}"
+    fi
+
+    local sf="${prefix}.sfCRE.bed" sd="${prefix}.sdCRE.bed" so="${prefix}.soCRE.bed"
+    local non_sf
+    non_sf=$(mktemp)
+    if is_promoter "${state}"; then
+        local mid_all mid_sf mid_non_sf mid_sd
+        mid_all=$(mktemp); mid_sf=$(mktemp); mid_non_sf=$(mktemp); mid_sd=$(mktemp)
+        to_midpoint "${human_v3}" > "${mid_all}"
+        bedtools intersect -a "${mid_all}" -b "${sheep_same}" -f 1.0 -wa | sort -u > "${mid_sf}"
+        recover_by_name "${mid_sf}" "${human_v3}" > "${sf}"
+        bedtools intersect -a "${human_v3}" -b "${sf}" -v > "${non_sf}"
+        to_midpoint "${non_sf}" > "${mid_non_sf}"
+        bedtools intersect -a "${mid_non_sf}" -b "${sheep_other}" -f 1.0 -wa | sort -u > "${mid_sd}"
+        recover_by_name "${mid_sd}" "${non_sf}" > "${sd}"
+        bedtools intersect -a "${non_sf}" -b "${sd}" -v > "${so}"
+        rm -f "${mid_all}" "${mid_sf}" "${mid_non_sf}" "${mid_sd}"
+    else
+        bedtools intersect -a "${human_v3}" -b "${sheep_same}" -f "${OVERLAP_FRAC}" -wa | sort -u > "${sf}"
+        bedtools intersect -a "${human_v3}" -b "${sheep_same}" -f "${OVERLAP_FRAC}" -v > "${non_sf}"
+        bedtools intersect -a "${non_sf}" -b "${sheep_other}" -f "${OVERLAP_FRAC}" -wa | sort -u > "${sd}"
+        bedtools intersect -a "${non_sf}" -b "${sheep_other}" -f "${OVERLAP_FRAC}" -v > "${so}"
+    fi
+    rm -f "${non_sf}" "${sheep_same}" "${sheep_other}"
+    echo "[DONE] ${human_tissue}/${sheep_tissue} ${state}: sf=$(wc -l < "${sf}") sd=$(wc -l < "${sd}") so=$(wc -l < "${so}")"
+}
+export -f is_promoter to_midpoint recover_by_name process_classify
+export LIFTED_DIR CLASS_DIR SHEEP_REF_DIR OVERLAP_FRAC
+
+CLASS_TASKS="${TMP_DIR}/class_tasks.txt"
+: > "${CLASS_TASKS}"
+for index in "${!HUMAN_TISSUES[@]}"; do
+    for state in "${STATES[@]}"; do
+        echo "${HUMAN_TISSUES[$index]} ${SHEEP_TISSUES[$index]} ${state}" >> "${CLASS_TASKS}"
+    done
+done
+xargs -P "${NCPU}" -L 1 bash -c 'process_classify "$@"' _ < "${CLASS_TASKS}"
+rm -f "${CLASS_TASKS}"
+
+SUMMARY="${WORKDIR}/per_tissue_classification.tsv"
+{
+    printf 'human_tissue\tsheep_tissue\tstate\tsfCRE\tsdCRE\tsoCRE\tssCRE\ttotal\n'
+    for index in "${!HUMAN_TISSUES[@]}"; do
+        human_tissue="${HUMAN_TISSUES[$index]}"
+        sheep_tissue="${SHEEP_TISSUES[$index]}"
+        for state in "${STATES[@]}"; do
+            prefix="${CLASS_DIR}/${human_tissue}_${sheep_tissue}_${state}"
+            sf=0; sd=0; so=0; ss=0
+            [[ -s "${prefix}.sfCRE.bed" ]] && sf=$(wc -l < "${prefix}.sfCRE.bed")
+            [[ -s "${prefix}.sdCRE.bed" ]] && sd=$(wc -l < "${prefix}.sdCRE.bed")
+            [[ -s "${prefix}.soCRE.bed" ]] && so=$(wc -l < "${prefix}.soCRE.bed")
+            unmapped="${LIFTED_DIR}/${human_tissue}_${state}.unmapped"
+            [[ -s "${unmapped}" ]] && ss=$(awk '!/^#/{n++} END{print n+0}' "${unmapped}")
+            total=$((sf + sd + so + ss))
+            printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+                "${human_tissue}" "${sheep_tissue}" "${state}" \
+                "${sf}" "${sd}" "${so}" "${ss}" "${total}"
+        done
+    done
+} > "${SUMMARY}"
+log "Completed. Summary: ${SUMMARY}"

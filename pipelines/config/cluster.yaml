@@ -1,0 +1,109 @@
+__default__:
+  partition: "low"
+  cpus: "{threads}"
+  name: "{rule}.{wildcards}"
+  output: "Logs/{rule}.{wildcards}.out"
+  time: "5-0"
+
+macs2_callpeak_broad:
+  partition: "low"
+  mem: 8G
+  cpus: 2
+
+macs2_callpeak_narrow:
+  partition: "low"
+  mem: 8G
+  cpus: 2
+
+macs2_callpeak_atac:
+  partition: "low"
+  mem: 8G
+  cpus: 2
+
+bdgcmp_ppois:
+  partition: "low"
+  mem: 8G
+  cpus: 2
+  
+slop_and_clip:
+  partition: "low"
+  mem: 2G
+  cpus: 1
+
+sort_bedgraph:
+  partition: "low"
+  mem: 2G
+  cpus: 1
+
+merge_bedgraph:
+  partition: "low"
+  mem: 2G
+  cpus: 1
+
+bedgraph_to_bigwig:
+  partition: "low"
+  mem: 2G
+  cpus: 1
+
+gzip_bedgraph:
+  partition: "low"
+  mem: 2G
+  cpus: 1
+
+zscore_normalize_bedgraph:
+  partition: "low"
+  mem: 8G
+  cpus: 4
+
+bam_coverage_bedgraph:
+  partition: "low"
+  mem: 4G
+  cpus: 2
+
+bamCoverage:
+  partition: "low"
+  mem: 10G
+  cpus: 5
+
+zscore_bedgraph_to_bigwig:
+  partition: "low"
+  mem: 2G
+  cpus: 1
+
+bedtools_blacklist:
+  partition: "low"
+  mem: 6G
+  cpus: 3
+
+samtools_index:
+  partition: "low"
+  mem: 2G
+  cpus: 1
+
+bedtools_bamtobed:
+  partition: "low"
+  mem: 2G
+  cpus: 1
+
+rna_bam_coverage_bigwig:
+  partition: "low"
+  mem: 50G
+  cpus: 25
+
+rna_bam_coverage_bedgraph:
+  partition: "low"
+  mem: 50G
+  cpus: 25
+
+zscore_normalize_bedgraph:
+  partition: "low"
+  mem: 8G
+  cpus: 4
+
+zscore_bedgraph_to_bigwig:
+  partition: "low"
+  mem: 8G
+  cpus: 4
+
+
+

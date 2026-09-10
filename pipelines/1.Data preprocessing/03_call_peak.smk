@@ -45,7 +45,7 @@ rule macs2_callpeak_atac:
     output:
         peaks = f"{PEAK_DIR}" + "/{sample}_peaks.narrowPeak"
     conda:
-        "/vol2/mengzhu/snakemake_sheep/Envs/macs.yaml"
+        '../Envs/macs.yaml'
     params:
         gsize = GENOME_SIZE
     shell:
@@ -76,7 +76,7 @@ rule macs2_callpeak_narrow:
     output:
         peaks = f"{PEAK_DIR}" + "/{sample}_peaks.narrowPeak"
     conda:
-        "/vol2/mengzhu/snakemake_sheep/Envs/macs.yaml"
+        '../Envs/macs.yaml'
     params:
         genome_size = GENOME_SIZE
     shell:
@@ -104,7 +104,7 @@ rule macs2_callpeak_broad:
     output:
         peaks = f"{PEAK_DIR}" + "/{sample}_peaks.broadPeak"
     conda:
-        "/vol2/mengzhu/snakemake_sheep/Envs/macs.yaml"
+        '../Envs/macs.yaml'
     params:
         genome_size = GENOME_SIZE
     shell:
@@ -121,4 +121,3 @@ rule macs2_callpeak_broad:
             --broad --to-large \
             --outdir {PEAK_DIR}
         """
-

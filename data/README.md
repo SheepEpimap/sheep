@@ -7,8 +7,7 @@ generated analysis outputs are distributed with this repository.
 
 - Raw CUT&Tag (H3K4me3, H3K4me1, H3K27ac and H3K27me3), ATAC-seq and RNA-seq
   data across 43 sheep tissues: NCBI SRA BioProject `PRJNA1237432`.
-- Whole-genome sequencing data used for sheep GWAS analyses: NCBI SRA
-  BioProject `PRJNA1304012`.
+- SheepGTEx RNA-seq data: NCBI SRA BioProject `PRJNA1304012`.
 - Processed chromatin states, peaks, bigWig tracks, enhancer-gene links and
   motif-instance annotations: [SheepEpimap UCSC Genome Browser session](https://genome.ucsc.edu/s/mengzhu/SheepEpimap).
 
@@ -16,8 +15,8 @@ generated analysis outputs are distributed with this repository.
 
 - Primary sheep reference used for read alignment: ARS-UI_Ramb_v2.0,
   NCBI accession `GCF_016772045.1`.
-- Cross-species CRE workflow intermediate sheep assembly: NCBI accession
-  `GCF_016772045.2`.
+- Cross-species CRE workflow intermediate sheep assembly: ARS-UI_Ramb_v3.0,
+  NCBI accession `GCF_016772045.2`.
 - Human coordinate systems: hg38 and hg19, as identified in the corresponding
   Figure 8 path configuration and liftOver scripts.
 

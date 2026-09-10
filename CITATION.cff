@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this code, please cite the SheepEpimap manuscript and this repository."
 title: "SheepEpimap analysis and figure code"
-type: software
+type: software-code
 authors:
   - family-names: Zhu
     given-names: Meng

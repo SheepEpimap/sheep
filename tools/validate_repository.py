@@ -152,6 +152,34 @@ def check_snakemake(root: Path) -> Check:
     return Check("Snakemake syntax", "PASS", f"{len(files)} files passed snakemake --lint")
 
 
+def check_snakemake_env_files(root: Path) -> Check:
+    """Ensure every conda: declaration points to a checked-in YAML file."""
+    pattern = re.compile(r"^\s*['\"]?(?P<path>(?:\.\./|\./)?[^'\"\s]+\.ya?ml)['\"]?\s*$")
+    missing: list[str] = []
+    references = 0
+    for path in sorted(root.rglob("*.smk")):
+        lines = path.read_text(encoding="utf-8-sig").splitlines()
+        in_conda = False
+        for line in lines:
+            if re.match(r"^\s*conda:\s*$", line):
+                in_conda = True
+                continue
+            if in_conda and line and not line[0].isspace():
+                in_conda = False
+            if not in_conda or line.lstrip().startswith("#"):
+                continue
+            match = pattern.match(line)
+            if not match:
+                continue
+            references += 1
+            target = (path.parent / match.group("path")).resolve()
+            if not target.is_file():
+                missing.append(f"{path.relative_to(root)} -> {match.group('path')}")
+    if missing:
+        return Check("Snakemake conda environments", "FAIL", "; ".join(missing))
+    return Check("Snakemake conda environments", "PASS", f"{references} references resolve")
+
+
 def check_figure_map(root: Path) -> Check:
     map_path = root / "FIGURE_CODE_MAP.tsv"
     if not map_path.is_file():
@@ -290,6 +318,7 @@ def main() -> int:
         check_bash(root),
         check_r(root),
         check_snakemake(root),
+        check_snakemake_env_files(root),
         check_figure_map(root),
         check_markdown_links(root),
         check_text_encoding(root),

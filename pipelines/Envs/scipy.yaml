@@ -1,0 +1,6 @@
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - scipy=1.11.3

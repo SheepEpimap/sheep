@@ -1,0 +1,21 @@
+tissues: [abomasum, adipose, bone-marrow, brainstem, cecum, cerebellum, cerebral-cortex, cervix, colon, cornua-uteri, corpus-uteri, duodenum, epididymis, heart, hippocampus, hypothalamus, ileum, jejunum, kidney, liver, lung, lymph-node, mammary-gland, medulla-oblongata, midbrain, muscle, omasum, optic-chiasm, ovary, oviduct, pineal, pituitary, pons, rectum, reticulum, rumen, skin, soft-horn, spleen, splenium, testis, thymus, thyroid]
+reps: [39, 40, 39-1, 40-1]
+narrow_peaks: [H3K27ac, H3K4me3, H3K4me1]
+broad_peaks: [ATAC, H3K27me3]
+no_input: [ATAC, H3K27ac, H3K4me3, H3K4me1, H3K27me3]
+inputs: [Input]
+H3K4me3_input: Input
+H3K27me3_input: Input
+H3K27ac_input: Input
+H3K4me1_input: Input
+CTCF_input: Input
+genome: /public/home/mengzhu/reference/GCF_016772045.1_ARS-UI_Ramb_v2.0_genomic.fna
+genomesize: 2628146905
+annotation: /public/home/mengzhu/reference/GCF_016772045.1_ARS-UI_Ramb_v2.0_genomic.gtf
+mapq: 30
+ChromHMM_genome: Ramb2
+ChromHMM_assays: [H3K4me3, H3K27ac, H3K4me1, H3K27me3, ATAC]
+ChromHMM_tissues: [abomasum, adipose, bone-marrow, brainstem, cecum, cerebellum, cerebral-cortex, cervix, colon, cornua-uteri, corpus-uteri, duodenum, epididymis, heart, hippocampus, hypothalamus, ileum, jejunum, kidney, liver, lung, lymph-node, mammary-gland, medulla-oblongata, midbrain, muscle, omasum, optic-chiasm, ovary, oviduct, pineal, pituitary, pons, rectum, reticulum, rumen, skin, soft-horn, spleen, splenium, testis, thymus, thyroid]
+chromsizes: /vol2/mengzhu/snakemake_sheep/ChromHMM/Chromosome_Lengths.txt
+tempdir: Temp
+bad_libraries: []

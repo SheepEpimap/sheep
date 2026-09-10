@@ -2,9 +2,9 @@
 
 ## Demonstration workflow
 
-The repository demo was tested with Python 3.12.3 on Windows 11. Continuous
-integration also runs it on the current GitHub-hosted Ubuntu image with Python
-3.11. It requires one CPU, less than 250 MB of RAM, less than 10 MB of temporary
+The repository demo was tested with Python 3.12.3 on Ubuntu 24.04.3 LTS under
+WSL2 on Windows 11. Continuous integration also runs it on GitHub-hosted
+Ubuntu 24.04 with Python 3.11. It requires one CPU, less than 250 MB of RAM, less than 10 MB of temporary
 disk space and normally completes in under two seconds after dependencies are
 loaded. No GPU, scheduler or network connection is required at run time.
 

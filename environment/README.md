@@ -10,7 +10,12 @@ workflow-specific programs require separate environments or installations; use
 the manuscript-recorded version in `software_versions.tsv` for reproduction.
 
 The lightweight demo requires only Python 3.10 or newer and the Python standard
-library. It was tested with Python 3.12.3 on Ubuntu 24.04.3 LTS under WSL2.
+library. It was tested with Python 3.12.3 on Ubuntu 24.04.3 LTS under WSL2 on
+Windows 11.
+
+The production server inventory (27 conda environments and 6,137 package
+records) is provided under `server_inventory/`. It records the versions used
+for the full analysis beyond the small demo environment.
 
 To capture a full environment on the analysis server, run:
 

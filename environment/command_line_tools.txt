@@ -1,12 +1,15 @@
-bedtools
-ChromBPNet
-deepTools
-Fi-NeMo
-GimmeMotifs
-MEME Suite (TomTom/FIMO)
-modisco-lite
-NucleoATAC
-PLINK
-samtools
-TOBIAS
-UCSC utilities
+bedtools 2.31.1
+ChromBPNet 1.0.1
+deepTools 3.5.6
+Fi-NeMo (repository release used by the workflow)
+GimmeMotifs (install the latest release; not present in the production inventory)
+MEME Suite (TomTom/FIMO) 5.5.8
+modisco-lite 2.4.0
+NucleoATAC 0.3.4
+PLINK 1.90b6.21
+samtools 1.18
+TOBIAS 0.17.3
+UCSC utilities 482
+
+The complete 2026-09-10 server package export is in
+`server_inventory/conda_packages_20260910.tsv`.

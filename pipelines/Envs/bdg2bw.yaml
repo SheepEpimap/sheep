@@ -1,0 +1,8 @@
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - bedtools=2.27.1
+  - ucsc-bedclip=482
+  - ucsc-bedgraphtobigwig=482

@@ -14,7 +14,7 @@ cross-species regulatory conservation.
 
 | Path | Contents |
 |---|---|
-| `pipelines/` | Stage-oriented upstream analysis workflows |
+| `pipelines/` | Stage-oriented upstream analysis workflows and versioned Snakemake environments |
 | `figures/` | Figure- and panel-oriented workflows with numbered execution order |
 | `config/` | Example path configuration for adapting the original HPC layout |
 | `environment/` | Python, R and command-line dependency inventories |
@@ -55,7 +55,9 @@ python tests/demo/run_demo.py
 Environment creation typically takes 15-30 minutes on a broadband connection;
 large packages and solver performance can extend this time. The enhancer-target
 gene demo normally completes in under two seconds. Exact analysis versions are recorded
-in [`environment/software_versions.tsv`](environment/software_versions.tsv),
+in [`environment/software_versions.tsv`](environment/software_versions.tsv) and the
+complete production conda inventory is in
+[`environment/server_inventory/`](environment/server_inventory/).
 and tested operating-system and hardware requirements are described in
 [`docs/SYSTEM_REQUIREMENTS.md`](docs/SYSTEM_REQUIREMENTS.md).
 

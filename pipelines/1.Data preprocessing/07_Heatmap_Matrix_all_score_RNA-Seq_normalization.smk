@@ -32,7 +32,7 @@ rule rna_bam_coverage_bigwig:
     output:
         "/vol2/mengzhu/snakemake_sheep/clean/bam1/unblacklist/bw/{sample}.bw"
     conda:
-        "/vol2/mengzhu/snakemake_sheep/Envs/deeptools.yaml"
+        '../Envs/deeptools.yaml'
     threads: 25
     params:
         gsize = GENOME_SIZE
@@ -48,7 +48,7 @@ rule rna_bam_coverage_bedgraph:
     output:
         "/vol2/mengzhu/snakemake_sheep/clean/bam1/unblacklist/bw/{sample}.bdg"
     conda:
-        "/vol2/mengzhu/snakemake_sheep/Envs/deeptools.yaml"
+        '../Envs/deeptools.yaml'
     threads: 25
     params:
         gsize = GENOME_SIZE
@@ -65,7 +65,7 @@ rule zscore_normalize_bedgraph:
         bedgraph = "/vol2/mengzhu/snakemake_sheep/clean/bam1/unblacklist/bw/{sample}_ZScores.bdg"
     threads: 4
     conda:
-        "/vol2/mengzhu/snakemake_sheep/Envs/scipy.yaml"
+        '../Envs/scipy.yaml'
     script:
         "/vol2/mengzhu/snakemake_sheep/Scripts/ZScore_Normalize_BedGraph.py"
 
@@ -77,6 +77,6 @@ rule zscore_bedgraph_to_bigwig:
     output:
         "/vol2/mengzhu/snakemake_sheep/clean/bam1/unblacklist/bw/{sample}_ZScores.bw"
     conda:
-        "/vol2/mengzhu/snakemake_sheep/Envs/bdg2bw.yaml"
+        '../Envs/bdg2bw.yaml'
     shell:
         "bedGraphToBigWig {input.bedgraph} {input.chromsizes} {output}"

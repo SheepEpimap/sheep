@@ -3,6 +3,8 @@ original_prefix	replacement_prefix
 /vol2/zhangshiwen	/path/to/zhangshiwen_project_storage
 /vol2/wulingyun	/path/to/wulingyun_project_storage
 /vol2/zhuangziyang	/path/to/zhuangziyang_project_storage
+/vol2/00_panlab_rawdata	/path/to/panlab_raw_data
+/vol2/lixinyi	/path/to/lixinyi_project_storage
 /public/home/mengzhu	/path/to/mengzhu_home
 /storage/public/home	/path/to/shared_home_storage
 /data/home/sczd644	/path/to/sczd644_home
