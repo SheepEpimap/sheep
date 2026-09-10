@@ -15,8 +15,9 @@ python tools/validate_repository.py .
 | Snakemake syntax | Not run | Snakemake is unavailable in the local validation environment |
 | Figure map | Pass | All 267 mapped script paths exist and use approved relationship labels |
 | Markdown links | Pass | All 56 repository-relative links resolved |
-| UTF-8 text | Pass | All 463 checked text files decoded |
-| GitHub file-size limit | Pass | 533 files checked; none is 100 MiB or larger |
+| Snakemake conda environments | Pass | All 32 conda environment references resolve to `pipelines/Envs/` |
+| UTF-8 text | Pass | All 478 checked text files decoded |
+| GitHub file-size limit | Pass | 548 files checked; none is 100 MiB or larger |
 | Credential-pattern scan | Pass | No high-confidence token, access-key or private-key pattern found |
 | Enhancer-target gene demo | Pass | Two expected H3K27ac-expression correlations reproduced in 1.3 seconds |
 
