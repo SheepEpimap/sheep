@@ -64,7 +64,7 @@ STATE_LABEL_MAP = {
     "E1": "E1 TssA",
     "E2": "E2 TssFlnk",
     "E3": "E3 TSSWk",
-    "E4": "E4 TssBiv",
+    "E4": "E4 TssWBiv",
     "E5": "E5 EnhA",
     "E6": "E6 EnhAMe",
     "E7": "E7 EnhAHet",

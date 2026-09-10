@@ -31,7 +31,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.gridspec import GridSpec
 from matplotlib.patches import Patch, Rectangle
-from scipy.stats import gaussian_kde, ttest_ind
+from scipy.stats import gaussian_kde, mannwhitneyu
 from statsmodels.stats.multitest import multipletests
 
 
@@ -120,7 +120,7 @@ STATE_LABELS = {
     "E1": "TssA",
     "E2": "TssFlnk",
     "E3": "TssWk",
-    "E4": "TssBiv",
+    "E4": "TssWBiv",
     "E5": "EnhA",
     "E6": "EnhAMe",
     "E7": "EnhAHet",
@@ -493,7 +493,7 @@ def _add_pairwise_fdr_brackets_horizontal(
         b = groups.get(order[j], np.array([]))
         if len(a) < 2 or len(b) < 2:
             continue
-        pvalues.append(ttest_ind(a, b, equal_var=False, nan_policy="omit").pvalue)
+        pvalues.append(mannwhitneyu(a, b, alternative="two-sided", nan_policy="omit").pvalue)
         valid_pairs.append((i, j))
 
     if not pvalues:
