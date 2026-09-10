@@ -16,10 +16,10 @@ python tools/validate_repository.py .
 | Figure map | Pass | All 267 mapped script paths exist and use approved relationship labels |
 | Markdown links | Pass | All 56 repository-relative links resolved |
 | Snakemake conda environments | Pass | All 32 conda environment references resolve to `pipelines/Envs/` |
-| UTF-8 text | Pass | All 478 checked text files decoded |
-| GitHub file-size limit | Pass | 548 files checked; none is 100 MiB or larger |
+| UTF-8 text | Pass | All 479 checked text files decoded |
+| GitHub file-size limit | Pass | 549 files checked; none is 100 MiB or larger |
 | Credential-pattern scan | Pass | No high-confidence token, access-key or private-key pattern found |
-| Enhancer-target gene demo | Pass | Two expected H3K27ac-expression correlations reproduced in 1.3 seconds |
+| Enhancer-target gene demo | Pass | Two expected H3K27ac-expression correlations reproduced in 1.9 seconds |
 
 Legacy workflows retain environment-specific HPC path prefixes. Create a
 configured working copy with `tools/relocate_paths.py` before running them.
