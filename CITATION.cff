@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the SheepEpimap manuscript and this repository."
+title: "SheepEpimap analysis and figure code"
+type: software
+authors:
+  - family-names: Zhu
+    given-names: Meng
+  - family-names: Zhang
+    given-names: Shiwen
+  - family-names: Zhuang
+    given-names: Ziyang
+  - family-names: He
+    given-names: Jiayi
+  - family-names: Liu
+    given-names: Fei
+  - family-names: Wu
+    given-names: Lingyun
+  - family-names: Sun
+    given-names: Xiangrong
+repository-code: "https://github.com/SheepEpimap/sheep"
+license: MIT
+version: 0.2.0
+date-released: 2026-09-10
+preferred-citation:
+  type: article
+  title: "A multi-tissue epigenomic atlas links the sheep non-coding genome to domestication and complex traits"
+  authors:
+    - family-names: Zhu
+      given-names: Meng
+    - family-names: Zhang
+      given-names: Shiwen
+    - family-names: Zhuang
+      given-names: Ziyang
+    - family-names: He
+      given-names: Jiayi
+    - family-names: Liu
+      given-names: Fei
+    - family-names: Wu
+      given-names: Lingyun
+    - family-names: Sun
+      given-names: Xiangrong
+  notes: "Manuscript under review; journal citation and DOI will be added when available."

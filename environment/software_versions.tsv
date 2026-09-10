@@ -1,0 +1,33 @@
+software	version	workflow	source
+Trim Galore	0.6.5	ATAC-seq and RNA-seq preprocessing	Manuscript Methods
+Trim Galore	0.6.6	WGBS preprocessing	Manuscript Methods
+STAR	2.7.11a	RNA-seq alignment	Manuscript Methods
+Bowtie2	2.5.3	ATAC-seq alignment	Manuscript Methods
+SAMtools	1.18	Alignment filtering and processing	Manuscript Methods
+HTSeq-count	2.0.4	Gene-level RNA-seq counting	Manuscript Methods
+edgeR	4.0.2	Expression normalization	Manuscript Methods
+StringTie2	2.2.1	Transcript assembly and quantification	Manuscript Methods
+Picard	3.1.1	CUT&Tag duplicate removal	Manuscript Methods
+MACS2	2.2.9.1	Peak calling	Manuscript Methods
+Juicer	1.6	Hi-C processing	Manuscript Methods
+Bismark	0.24.2	WGBS preprocessing	Manuscript Methods
+wgbs_tools	0.2.2	WGBS beta and pat processing	Manuscript Methods
+ChromHMM	1.26	Chromatin-state inference	Manuscript Methods
+ChromImpute	1.0.5	Epigenomic signal imputation	Manuscript Methods
+BEDTools	2.29.2	Genomic interval operations	Manuscript Methods
+clusterProfiler	4.4.1	GO enrichment	Manuscript Methods
+HOMER	4.11	Motif enrichment	Manuscript Methods
+ChromBPNet	1.0	Sequence-to-function modelling	Manuscript Methods
+IDR	2.0.3	Reproducible peak filtering	Manuscript Methods
+MEME FIMO	5.5.9	Motif scanning	Manuscript Methods
+GATK	4.6.2.0	SNP calling	Manuscript Methods
+Beagle	5.4	Genotype imputation and phasing	Manuscript Methods
+WASP	0.16.3	Reference-mapping bias correction	Manuscript Methods
+METAL	2020-05-05	GWAS meta-analysis	Manuscript Methods
+VCFtools	0.1.16	Population-genetic statistics	Manuscript Methods
+LDSC	1.0.0	Partitioned heritability enrichment	Manuscript Methods
+Python	3.12.3	Repository demo	Locally verified demo environment
+NumPy	2.5.3	Repository demo	Locally verified demo environment
+pandas	3.0.5	Repository demo	Locally verified demo environment
+SciPy	1.18.1	Pearson correlation demo	Locally verified demo environment
+statsmodels	0.15.0	Benjamini-Hochberg correction demo	Locally verified demo environment

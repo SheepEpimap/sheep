@@ -19,6 +19,7 @@ cross-species regulatory conservation.
 | `config/` | Example path configuration for adapting the original HPC layout |
 | `environment/` | Python, R and command-line dependency inventories |
 | `data/` | Data-access and local-data organization guidance |
+| `tests/demo/` | Synthetic end-to-end example with expected output |
 | `docs/` | Workflow, path-configuration and release documentation |
 | `tools/` | Repository validation utilities |
 | `FIGURE_CODE_MAP.tsv` | Figure-panel to script index |
@@ -48,11 +49,27 @@ conda activate sheep-epimap
 
 cp config/paths.example.env config/paths.env
 python tools/validate_repository.py .
+python tests/demo/run_demo.py
 ```
+
+Environment creation typically takes 15-30 minutes on a broadband connection;
+large packages and solver performance can extend this time. The enhancer-target
+gene demo normally completes in under two seconds. Exact analysis versions are recorded
+in [`environment/software_versions.tsv`](environment/software_versions.tsv),
+and tested operating-system and hardware requirements are described in
+[`docs/SYSTEM_REQUIREMENTS.md`](docs/SYSTEM_REQUIREMENTS.md).
 
 Read the README in the relevant pipeline or figure directory before execution.
 Update all input paths, reference assemblies, scheduler directives and resource
-requests for the target environment.
+requests for the target environment. For legacy scripts containing HPC path
+prefixes, copy [`config/path_prefixes.example.tsv`](config/path_prefixes.example.tsv),
+fill in the replacement roots, and create a configured working copy:
+
+```bash
+cp config/path_prefixes.example.tsv config/path_prefixes.tsv
+python tools/relocate_paths.py --mapping config/path_prefixes.tsv \
+  --output ../sheep-configured
+```
 
 ## Figure workflows
 
@@ -72,13 +89,13 @@ the computational workflows generate individual plots and tables.
 ## Data requirements
 
 No FASTQ/BAM/VCF files, reference genomes, controlled-access cohorts or large
-generated outputs are included. Before running a workflow, record the data
-repository and accession, checksum, reference assembly, annotation release,
-liftOver chain version and local path mapping. See [`data/README.md`](data/README.md).
+generated outputs are included. Study accessions, reference assemblies and
+chain-file requirements are listed in [`data/README.md`](data/README.md).
 
 ## Software requirements
 
-The environment files provide broad dependency inventories. ChromImpute,
+The environment files provide dependency inventories and manuscript-recorded
+versions. ChromImpute,
 ChromHMM, ChromBPNet, HOMER, MEME Suite, Juicer, Bismark, UCSC utilities and
 cluster schedulers may require separate installation. The historical GAT
 workflow requires a legacy Python 2.7 environment; see
@@ -102,9 +119,9 @@ reference files and bioinformatics software.
 
 ## Citation and license
 
-Add the final manuscript citation and DOI to `CITATION.cff` when available. The
-code owners should select and add an appropriate software license before public
-release.
+Citation metadata are provided in [`CITATION.cff`](CITATION.cff). The journal,
+volume, pages and DOI should be added after publication. Source code is released
+under the [MIT License](LICENSE).
 
 See [`docs/RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md) before creating a
 versioned release or archival DOI.

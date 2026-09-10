@@ -9,6 +9,7 @@ dependencies:
   - numpy
   - pandas
   - scipy
+  - statsmodels
   - scikit-learn
   - matplotlib
   - seaborn
@@ -16,20 +17,20 @@ dependencies:
   - pysam
   - pybigwig
   - beautifulsoup4
-  - bedtools
-  - samtools
+  - bedtools=2.29.2
+  - samtools=1.18
   - bcftools
-  - bowtie2
-  - trim-galore
-  - picard
-  - macs2
+  - bowtie2=2.5.3
+  - trim-galore=0.6.5
+  - picard=3.1.1
+  - macs2=2.2.9.1
   - deeptools
   - sambamba
   - ucsc-bedgraphtobigwig
   - ucsc-bedclip
   - ucsc-liftover
-  - meme
-  - homer
+  - meme=5.5.9
+  - homer=4.11
   - r-base
   - r-data.table
   - r-dplyr
@@ -47,7 +48,7 @@ dependencies:
   - bioconductor-complexheatmap
   - bioconductor-genomicranges
   - bioconductor-rtracklayer
-  - bioconductor-edger
+  - bioconductor-edger=4.0.2
   - pip:
       - modisco-lite
       - tspex

@@ -118,6 +118,10 @@ def check_r(root: Path) -> Check:
             rscript = str(candidates[0])
     if not rscript:
         return Check("R syntax", "SKIP", f"Rscript unavailable; {len(files)} files found")
+    sanity_code, sanity_output = run([rscript, "-e", "cat('R runtime available')"], root)
+    if sanity_code:
+        summary = sanity_output.splitlines()[-1] if sanity_output else "unknown runtime error"
+        return Check("R syntax", "SKIP", f"Rscript installation is unusable ({summary}); {len(files)} files found")
     errors: list[str] = []
     for path in files:
         expression = f"parse(file={str(path)!r})"

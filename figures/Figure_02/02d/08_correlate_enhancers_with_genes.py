@@ -1,245 +1,143 @@
 #!/usr/bin/env python3
-# Extracted and reorganized from user-supplied analysis notes.
-# Review PROJECT_ROOT and all input paths before execution.
-#egcorr_downsample_1.py
-import sys
+"""Link candidate enhancers to genes by cross-tissue signal correlation.
+
+For each expressed gene, find enhancers whose midpoint is near its transcription
+start site, correlate H3K27ac signal with RNA expression across shared samples,
+and apply Benjamini-Hochberg correction to all tested pairs.
+
+The fifth positional argument is retained for compatibility with the original
+Figure 2d command line; pass ``-`` when no state-label file is required.
+"""
+
+from __future__ import annotations
+
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+import re
+
 import pandas as pd
-import numpy as np
-import scipy.stats
+from scipy.stats import pearsonr
 from statsmodels.stats.multitest import multipletests
-import multiprocessing
-import traceback
 
-print("Arguments received:", sys.argv)
 
-print("Loading gene expression data...")
-genes1 = pd.read_csv(sys.argv[1], sep='\t', index_col=0)
-genes2 = pd.read_csv(sys.argv[2], sep='\t', index_col=0)
+ENHANCER_RE = re.compile(r"^(?P<chrom>[^:]+):(?P<start>\d+)-(?P<end>\d+)$")
 
-print(f"Genes1 shape: {genes1.shape}, columns: {genes1.columns[:3]}")
-print(f"Genes2 shape: {genes2.shape}, columns: {genes2.columns[:3]}")
 
-geneall = pd.concat([genes1, genes2], axis=1, join='inner')
-print(f"Merged gene expression shape: {geneall.shape}")
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("gene_expression_1", type=Path)
+    parser.add_argument("gene_expression_2", type=Path)
+    parser.add_argument("enhancer_h3k27ac_csv", type=Path)
+    parser.add_argument("tss_bed", type=Path)
+    parser.add_argument("state_labels", help="Legacy placeholder; use '-' if unused")
+    parser.add_argument("output_tsv", type=Path)
+    parser.add_argument("--window-bp", type=int, default=500_000)
+    parser.add_argument("--min-dynamic-range", type=float, default=6.0)
+    parser.add_argument("--workers", type=int, default=1)
+    return parser.parse_args()
 
-expected_order = [
-    "abomasum_39", "abomasum_40",
-    "adipose_39", "adipose_40",
-    "bone-marrow_39", "bone-marrow_40",
-    "brainstem_39", "brainstem_40",
-    "cecum_39", "cecum_40",
-    "cerebellum_39", "cerebellum_40",
-    "cerebral-cortex_39", "cerebral-cortex_40",
-    "cervix_39", "cervix_40",
-    "colon_39", "colon_40",
-    "cornua-uteri_39", "cornua-uteri_40",
-    "corpus-uteri_39", "corpus-uteri_40",
-    "duodenum_39", "duodenum_40",
-    "epididymis_39", "epididymis_40",
-    "heart_39", "heart_40",
-    "hippocampus_39", "hippocampus_40",
-    "hypothalamus_39", "hypothalamus_40",
-    "ileum_39", "ileum_40",
-    "jejunum_39", "jejunum_40",
-    "kidney_39", "kidney_40",
-    "liver_39", "liver_40",
-    "lung_39", "lung_40",
-    "lymph-node_39", "lymph-node_40",
-    "mammary-gland_39", "mammary-gland_40",
-    "medulla-oblongata_39", "medulla-oblongata_40",
-    "midbrain_39", "midbrain_40",
-    "muscle_39", "muscle_40",
-    "omasum_39", "omasum_40",
-    "optic-chiasm_39", "optic-chiasm_40",
-    "ovary_39", "ovary_40",
-    "oviduct_39", "oviduct_40",
-    "pineal_39", "pineal_40",
-    "pituitary_39", "pituitary_40",
-    "pons_39", "pons_40",
-    "rectum_39", "rectum_40",
-    "reticulum_39", "reticulum_40",
-    "rumen_39", "rumen_40",
-    "skin_39", "skin_40",
-    "soft-horn_39", "soft-horn_40",
-    "spleen_39", "spleen_40",
-    "splenium_39", "splenium_40",
-    "testis_39", "testis_40",
-    "thymus_39", "thymus_40",
-    "thyroid_39", "thyroid_40"
-]
 
-print("Reordering gene expression columns...")
+def dynamic_range_filter(frame: pd.DataFrame, threshold: float) -> pd.DataFrame:
+    numeric = frame.apply(pd.to_numeric, errors="coerce")
+    dynamic_range = numeric.max(axis=1) / (numeric.min(axis=1) + 0.0001)
+    return numeric.loc[dynamic_range > threshold]
 
-common_columns = [col for col in expected_order if col in geneall.columns]
 
-if len(common_columns) != len(geneall.columns):
-    missing = set(geneall.columns) - set(common_columns)
-    print(f"Warning: {len(missing)} columns not in expected order: {list(missing)[:3]}...")
-    geneall = geneall[common_columns]
-else:
-    geneall = geneall[common_columns]
+def read_inputs(args: argparse.Namespace):
+    genes_1 = pd.read_csv(args.gene_expression_1, sep="\t", index_col=0)
+    genes_2 = pd.read_csv(args.gene_expression_2, sep="\t", index_col=0)
+    genes = pd.concat([genes_1, genes_2], axis=1, join="inner")
+    enhancers = pd.read_csv(args.enhancer_h3k27ac_csv, index_col=0)
 
-common_samples = geneall.columns.tolist()
-print(f"Reordered gene expression columns: {len(common_samples)} samples")
-print(f"Sample order (first 4): {common_samples[:4]}")
+    samples = [sample for sample in genes.columns if sample in enhancers.columns]
+    if len(samples) < 3:
+        raise ValueError("At least three shared samples are required")
+    genes = dynamic_range_filter(genes.loc[:, samples], args.min_dynamic_range)
+    enhancers = dynamic_range_filter(enhancers.loc[:, samples], args.min_dynamic_range)
 
-common_samples = geneall.columns.tolist()
-print(f"Gene expression samples ({len(common_samples)}): {common_samples[:5]}...")
-
-print("Loading regulatory elements data...")
-
-signal_columns = ['enhancer'] + common_samples
-
-try:
-    regs = pd.read_csv(
-        sys.argv[3],
-        sep=',',
-        skiprows=1,  #  ( )
-        header=None,
-        names=signal_columns,
-        index_col=0,  #  enhancer
-        dtype={col: float for col in signal_columns[1:]},  #
-        low_memory=False
-    )
-    print(f"Initial regulatory elements shape: {regs.shape}")
-
-    for col in regs.columns:
-        regs[col] = pd.to_numeric(regs[col], errors='coerce')
-
-    regs = regs.dropna(how='all')
-    print(f"After dropping all-NaN rows: {regs.shape}")
-except Exception as e:
-    print(f"Error loading regulatory data: {e}")
-    traceback.print_exc()
-    sys.exit(1)
-
-print("Filtering genes by dynamic range...")
-genes = geneall.copy()
-genes = genes[genes.apply(lambda row: row.max() / (row.min() + 0.0001) > 6, axis=1)]
-print(f"Filtered gene expression shape: {genes.shape}")
-
-print("Filtering regulatory elements by dynamic range...")
-regs = regs.apply(pd.to_numeric, errors='coerce')
-regs = regs[regs.apply(lambda row: row.max() / (row.min() + 0.0001) > 6, axis=1)]
-print(f"Filtered regulatory elements shape: {regs.shape}")
-
-print("Loading TSS positions...")
-try:
     tss = pd.read_csv(
-        sys.argv[4],
-        sep='\t',
+        args.tss_bed,
+        sep="\t",
         header=None,
-        names=['chr', 'start', 'end', 'gene_id1', 'gene_id2', 'strand'],
-        index_col=3  #  gene_id1
-    )
-    print(f"TSS positions loaded. Shape: {tss.shape}")
-    print(f"TSS index sample: {tss.index[:5].tolist()}")
-    print(f"Gene expression index sample: {genes.index[:5].tolist()}")
-except Exception as e:
-    print(f"Error loading TSS data: {e}")
-    traceback.print_exc()
-    sys.exit(1)
+        names=["chrom", "start", "end", "gene_id", "gene_name", "strand"],
+    ).drop_duplicates("gene_id", keep="first").set_index("gene_id")
+    return genes, enhancers, tss, samples
 
-def check_in_window(row, chrom, pos, window=500000):
-    try:
-        ch, rng = row.name.split(':')
-        start, end = map(int, rng.split('-'))
 
-        if ch != chrom:
-            return None
+def enhancer_locations(enhancers: pd.DataFrame) -> dict[str, tuple[str, int]]:
+    locations = {}
+    for enhancer_id in enhancers.index:
+        match = ENHANCER_RE.match(str(enhancer_id))
+        if match is None:
+            raise ValueError(f"Invalid enhancer coordinate: {enhancer_id!r}")
+        midpoint = (int(match.group("start")) + int(match.group("end"))) // 2
+        locations[str(enhancer_id)] = (match.group("chrom"), midpoint)
+    return locations
 
-        enhancer_midpoint = (start + end) // 2
-        distance = abs(pos - enhancer_midpoint)
 
-        if distance <= window:
-            return distance
-        return None
-    except Exception as e:
-        print(f"Error processing {row.name}: {e}")
-        return None
+def correlate_gene(gene_id, genes, enhancers, tss, locations, samples, window_bp):
+    if gene_id not in tss.index:
+        return []
+    chrom = str(tss.at[gene_id, "chrom"])
+    position = int(tss.at[gene_id, "start"])
+    records = []
+    for enhancer_id, (enhancer_chrom, midpoint) in locations.items():
+        distance = abs(position - midpoint)
+        if enhancer_chrom != chrom or distance > window_bp:
+            continue
+        paired = pd.concat(
+            [genes.loc[gene_id, samples], enhancers.loc[enhancer_id, samples]],
+            axis=1,
+            keys=["expression", "h3k27ac"],
+        ).dropna()
+        if len(paired) < 3 or paired["expression"].nunique() < 2 or paired["h3k27ac"].nunique() < 2:
+            continue
+        correlation, p_value = pearsonr(paired["expression"], paired["h3k27ac"])
+        records.append(
+            {
+                "gene": gene_id,
+                "enhancer": enhancer_id,
+                "pearson_r": correlation,
+                "p_value": p_value,
+                "distance_bp": distance,
+                "n_samples": len(paired),
+            }
+        )
+    return records
 
-def find_regulators(gene):
-    try:
-        gene_name = gene.name
 
-        if gene_name not in tss.index:
-            return None
+def run(args: argparse.Namespace) -> pd.DataFrame:
+    if args.workers < 1:
+        raise ValueError("--workers must be at least 1")
+    genes, enhancers, tss, samples = read_inputs(args)
+    locations = enhancer_locations(enhancers)
 
-        gene_tss = tss.loc[gene_name]
-        chrom = gene_tss['chr']
-        pos = int(gene_tss['start'])
+    def analyse(gene_id):
+        return correlate_gene(gene_id, genes, enhancers, tss, locations, samples, args.window_bp)
 
-        dists = regs.apply(check_in_window, axis=1, args=(chrom, pos))
-        candidates = dists[dists.notnull()]
-        if candidates.empty:
-            return None
-
-        results = []
-        for reg, dist in candidates.items():
-            try:
-                gene_vector = gene[common_samples]
-                enhancer_vector = regs.loc[reg, common_samples]
-
-                df = pd.DataFrame({
-                    'gene': gene_vector,
-                    'enhancer': enhancer_vector
-                }).dropna()
-
-                if len(df) < 3:
-                    continue
-
-                r, pval = scipy.stats.pearsonr(df['gene'], df['enhancer'])
-
-                results.append({
-                    'gene': gene_name,
-                    'regulator': reg,
-                    'pearson_r': r,
-                    'pval': pval,
-                    'distance': dist,
-                    'n_samples': len(df)
-                })
-            except Exception as e:
-                continue
-
-        if not results:
-            return None
-        return pd.DataFrame(results)
-
-    except Exception as e:
-        return None
-
-def batch_process(subset):
-    results = []
-    for i in range(len(subset)):
-        res = find_regulators(subset.iloc[i])
-        if res is not None:
-            results.append(res)
-    return pd.concat(results, ignore_index=True) if results else None
-
-print("Starting correlation analysis...")
-print(f"Genes to process: {genes.shape[0]}, Regulatory elements: {regs.shape[0]}")
-try:
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-        df_split = np.array_split(genes, multiprocessing.cpu_count())
-        results = pool.map(batch_process, df_split)
-
-    print("Merging results...")
-    final = pd.concat([res for res in results if res is not None], ignore_index=True)
-
-    if not final.empty:
-        print(f"Found {len(final)} correlations before FDR correction")
-        _, final['qval'], _, _ = multipletests(final['pval'], method='fdr_bh')
-        print(f"After FDR correction: {len(final)} correlations")
+    if args.workers == 1:
+        nested = [analyse(gene_id) for gene_id in genes.index]
     else:
-        print("No significant correlations found.")
-        final = pd.DataFrame(columns=['gene', 'regulator', 'pearson_r', 'pval', 'distance', 'n_samples', 'qval'])
+        with ThreadPoolExecutor(max_workers=args.workers) as executor:
+            nested = list(executor.map(analyse, genes.index))
 
-    # saveresults
-    output_file = sys.argv[6]
-    final.to_csv(output_file, sep='\t', index=False)
-    print(f"Analysis completed. Results saved to {output_file}")
+    records = [record for gene_records in nested for record in gene_records]
+    columns = ["gene", "enhancer", "pearson_r", "p_value", "distance_bp", "n_samples", "q_value"]
+    if not records:
+        return pd.DataFrame(columns=columns)
+    result = pd.DataFrame.from_records(records)
+    result["q_value"] = multipletests(result["p_value"], method="fdr_bh")[1]
+    return result.loc[:, columns].sort_values(["gene", "enhancer"]).reset_index(drop=True)
 
-except Exception as e:
-    print(f"Error during correlation analysis: {e}")
-    traceback.print_exc()
-    sys.exit(1)
+
+def main() -> None:
+    args = parse_args()
+    result = run(args)
+    args.output_tsv.parent.mkdir(parents=True, exist_ok=True)
+    result.to_csv(args.output_tsv, sep="\t", index=False)
+    print(f"Tested {len(result)} enhancer-gene pairs; results written to {args.output_tsv}")
+
+
+if __name__ == "__main__":
+    main()

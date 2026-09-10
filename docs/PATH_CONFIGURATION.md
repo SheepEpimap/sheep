@@ -22,6 +22,18 @@ Before execution:
    sizes and chain-file versions before using interval operations or liftOver.
 5. Run syntax checks and a Snakemake dry run before submitting large jobs.
 
+For a repository-wide migration, copy `config/path_prefixes.example.tsv` to an
+untracked mapping file, replace every placeholder with the corresponding local
+storage root, and run:
+
+```bash
+python tools/relocate_paths.py --mapping config/path_prefixes.tsv \
+  --output ../sheep-configured
+```
+
+This creates a separate configured copy and leaves the archival scripts
+unchanged. The command refuses to overwrite an existing output directory.
+
 Useful audit command:
 
 ```bash

@@ -1,0 +1,3 @@
+gene	enhancer	pearson_r	p_value	distance_bp	n_samples	q_value
+GENE_A	chr1:110000-110100	1.0	0.0	10050	6	0.0
+GENE_B	chr1:790000-790100	1.0	0.0	9950	6	0.0
