@@ -1,7 +1,9 @@
 # Data and reference resources
 
-No large sequencing files, reference genomes, population-genetics cohorts or
-generated analysis outputs are distributed with this repository.
+Unblacklisted peak calls are distributed in [`peaks/peak_unblacklist/`](peaks/peak_unblacklist/).
+See [`peaks/README.md`](peaks/README.md) for provenance and checksums. Raw
+sequencing files, reference genomes, population-genetics cohorts and other
+generated analysis outputs are not distributed with this repository.
 
 ## Study-generated data
 

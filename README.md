@@ -90,9 +90,9 @@ the computational workflows generate individual plots and tables.
 
 ## Data requirements
 
-No FASTQ/BAM/VCF files, reference genomes, controlled-access cohorts or large
-generated outputs are included. Study accessions, reference assemblies and
-chain-file requirements are listed in [`data/README.md`](data/README.md).
+No FASTQ/BAM/VCF files, reference genomes or controlled-access cohorts are
+included. Unblacklisted peak calls are provided under [`data/peaks/`](data/peaks/).
+Other data accessions and reference requirements are in [`data/README.md`](data/README.md).
 
 ## Software requirements
 
